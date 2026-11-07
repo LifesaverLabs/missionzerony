@@ -58,7 +58,7 @@ header.nav .wrap{display:flex;align-items:center;gap:20px;padding-block:12px;fle
 .brand{font:800 1.15rem/1 var(--f-display);color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
 .dot{width:14px;height:14px;border-radius:50%;background:var(--glow);box-shadow:0 0 0 4px var(--glow-soft)}
 nav.links{display:flex;gap:16px;flex-wrap:wrap;font:500 .9rem/1 var(--f-display)}
-nav.links a{color:var(--muted);text-decoration:none}
+nav.links a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;min-height:24px}
 nav.links a:hover{color:var(--ink)}
 section{padding-block:72px;border-top:1px solid var(--line)}
 section:first-of-type{border-top:0}
@@ -128,6 +128,7 @@ details.pol summary::-webkit-details-marker{display:none}
 /* visible open/closed affordance replacing the hidden native marker (decorative; the summary already exposes expanded/collapsed) */
 details.pol summary::after{content:"";grid-column:-2;align-self:center;width:.5em;height:.5em;margin:0 4px 0 2px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-25%) rotate(45deg);transition:transform .15s}
 details.pol[open] summary::after{transform:translateY(25%) rotate(-135deg)}
+@media (forced-colors:active){a[target="_blank"]::after{background:LinkText;forced-color-adjust:none}}
 details.pol summary,details.pol a{scroll-margin-top:var(--pbc,0px)}
 .pid{font:500 .8rem var(--f-mono);color:var(--accent)}
 .tag{font:500 .7rem/1 var(--f-mono);padding:4px 7px;border-radius:5px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
@@ -595,7 +596,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   document.getElementById('sensor').addEventListener('click',function(){say('BAC picture: 0.06 and rising. Not able to consent now. Projected under 0.05 at 1:40 a.m.');});
   document.getElementById('press').addEventListener('click',function(){i=(i+1)%steps.length; say(steps[i]); var f=document.querySelector('.hb-figure'); f.classList.remove('lit'); void f.offsetWidth; if(i>0) f.classList.add('lit');});
   document.getElementById('copy').addEventListener('click',function(){var b=this,t=document.getElementById('email').textContent,st=document.getElementById('copy-status');
-    function done(msg){b.textContent=msg; st.textContent=''; setTimeout(function(){st.textContent=msg;},50);}
+    function done(msg){b.textContent=msg; st.textContent=''; setTimeout(function(){st.textContent=msg;},50); clearTimeout(b._t); b._t=setTimeout(function(){b.textContent='Copy email';},3000);}
     function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected, press copy');}
     try{navigator.clipboard.writeText(t).then(function(){done('Copied');},sel);}catch(_){sel();}});
 })();

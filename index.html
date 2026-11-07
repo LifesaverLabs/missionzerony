@@ -17,23 +17,33 @@
   --bg:#F4F6F9; --panel:#FFFFFF; --ink:#121A2C; --muted:#56607A; --line:#D7DCE6;
   --accent:#9A5200; --glow:#F2A33A; --glow-soft:#FCE9CF; --night:#0F1628; --night-ink:#EEF1F7;
   --ok:#2F6B4F; --warn:#9A5200;
+  /* a11y: --focus is the keyboard focus ring (17:1 on panel); --field-line gives form fields a 3:1 boundary */
+  --focus:#121A2C; --field-line:#7A8399;
   --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --f-body:"Source Serif 4", Georgia, "Times New Roman", serif;
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0D1220; --panel:#151C2E; --ink:#E9EDF5; --muted:#9BA5BB; --line:#28324A;
-  --accent:#F2A33A; --glow:#F2A33A; --glow-soft:#2E2414; --night:#070B15; --night-ink:#EEF1F7; --ok:#7CC6A1; --warn:#F2A33A; color-scheme:dark}}
+  --accent:#F2A33A; --glow:#F2A33A; --glow-soft:#2E2414; --night:#070B15; --night-ink:#EEF1F7; --ok:#7CC6A1; --warn:#F2A33A; --focus:#F2A33A; --field-line:#6E7894; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0D1220; --panel:#151C2E; --ink:#E9EDF5; --muted:#9BA5BB; --line:#28324A;
-  --accent:#F2A33A; --glow:#F2A33A; --glow-soft:#2E2414; --night:#070B15; --night-ink:#EEF1F7; --ok:#7CC6A1; --warn:#F2A33A; color-scheme:dark}
+  --accent:#F2A33A; --glow:#F2A33A; --glow-soft:#2E2414; --night:#070B15; --night-ink:#EEF1F7; --ok:#7CC6A1; --warn:#F2A33A; --focus:#F2A33A; --field-line:#6E7894; color-scheme:dark}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth}
+/* --hdr / --pbc are measured by JS (sticky header and policy controls) so focused and linked targets never land underneath them (WCAG 2.4.11) */
+html{scroll-behavior:smooth;scroll-padding-top:calc(var(--hdr,72px) + 12px)}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-body{background:var(--bg);color:var(--ink);font:400 17px/1.6 var(--f-body);margin:0}
+body{background:var(--bg);color:var(--ink);font:400 1.0625rem/1.6 var(--f-body);margin:0}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--panel)}
 a{color:var(--accent);text-underline-offset:3px}
-a:focus-visible,button:focus-visible,summary:focus-visible,input:focus-visible{outline:2px solid var(--glow);outline-offset:2px;border-radius:4px}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.notice :focus-visible,.headboard :focus-visible,.pledge :focus-visible{outline-color:var(--glow)}
+main:focus{outline:none}
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;border:0}
+.skip{position:absolute;left:12px;top:-200px;z-index:20;padding:12px 18px;border-radius:999px;background:var(--ink);color:var(--bg);font:600 .95rem/1 var(--f-display);text-decoration:none}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 8px)}
+.skip:focus-visible{outline-color:var(--glow)}
+a[target="_blank"]::after{content:"";display:inline-block;width:.7em;height:.7em;margin-left:.2em;vertical-align:baseline;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M5 1.5H1.5v9h9V7M7 1.5h3.5V5M10.5 1.5 5.5 6.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6'%3E%3Cpath d='M5 1.5H1.5v9h9V7M7 1.5h3.5V5M10.5 1.5 5.5 6.5'/%3E%3C/svg%3E") center/contain no-repeat}
 .wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .col{max-width:72ch}
 h1,h2,h3{font-family:var(--f-display);line-height:1.1;text-wrap:balance;margin:0}
@@ -48,7 +58,7 @@ header.nav .wrap{display:flex;align-items:center;gap:20px;padding-block:12px;fle
 .brand{font:800 1.15rem/1 var(--f-display);color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
 .dot{width:14px;height:14px;border-radius:50%;background:var(--glow);box-shadow:0 0 0 4px var(--glow-soft)}
 nav.links{display:flex;gap:16px;flex-wrap:wrap;font:500 .9rem/1 var(--f-display)}
-nav.links a{color:var(--muted);text-decoration:none}
+nav.links a{color:var(--muted);text-decoration:none;display:inline-flex;align-items:center;min-height:24px}
 nav.links a:hover{color:var(--ink)}
 section{padding-block:72px;border-top:1px solid var(--line)}
 section:first-of-type{border-top:0}
@@ -71,6 +81,7 @@ section:first-of-type{border-top:0}
 .hb-figure.lit .hb-btn{transform-origin:180px 86px;animation:hbpress .25s ease}
 @keyframes hbpress{50%{transform:scale(.94)}}
 .headboard small{font:400 .82rem/1.45 var(--f-display);color:#B9C1D6;max-width:30ch}
+.press:focus-visible,.sensor:focus-visible{outline-offset:-3px}
 .headboard .resp{font:500 .85rem/1.4 var(--f-mono);color:#FFD596;min-height:2.8em}
 .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:8px}
 .stat{border-top:2px solid var(--ink);padding-top:10px}
@@ -80,6 +91,8 @@ section:first-of-type{border-top:0}
 table{border-collapse:collapse;width:100%;font:400 .92rem/1.45 var(--f-display);font-variant-numeric:tabular-nums}
 th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 th{font-weight:600;color:var(--muted);font-size:.82rem}
+tbody th{font-weight:inherit;color:inherit;font-size:inherit}
+.tablewrap:focus-visible{outline-offset:-3px}
 tr:last-child td{border-bottom:0}
 td.num{text-align:right}
 .caption{font-size:.9rem;color:var(--muted)}
@@ -101,8 +114,8 @@ td.num{text-align:right}
 .guarantees li::before{content:"";position:absolute;left:0;top:.55em;width:10px;height:10px;border-radius:50%;border:2px solid var(--accent)}
 ul.plain{margin:0;padding-left:1.2em;display:grid;gap:8px}
 /* policy browser */
-.pb-controls{display:grid;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 58px);z-index:5;background:var(--bg);padding-block:12px}
-.search{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:400 1rem var(--f-display)}
+.pb-controls{display:grid;gap:12px;position:sticky;top:calc(env(safe-area-inset-top,0px) + var(--hdr,58px));z-index:5;background:var(--bg);padding-block:12px}
+.search{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--field-line);background:var(--panel);color:var(--ink);font:400 1rem var(--f-display)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
 .chip{flex:0 0 auto;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:500 .82rem/1 var(--f-display);cursor:pointer;white-space:nowrap}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
@@ -110,8 +123,13 @@ ul.plain{margin:0;padding-left:1.2em;display:grid;gap:8px}
 .theme-head{margin:28px 0 8px;display:flex;align-items:baseline;gap:10px}
 .theme-head span{font:500 .8rem var(--f-mono);color:var(--muted)}
 details.pol{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
-details.pol summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:baseline;padding:12px 14px;font:500 1rem/1.35 var(--f-display)}
+details.pol summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:baseline;padding:12px 14px;font:500 1rem/1.35 var(--f-display)}
 details.pol summary::-webkit-details-marker{display:none}
+/* visible open/closed affordance replacing the hidden native marker (decorative; the summary already exposes expanded/collapsed) */
+details.pol summary::after{content:"";grid-column:-2;align-self:center;width:.5em;height:.5em;margin:0 4px 0 2px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:translateY(-25%) rotate(45deg);transition:transform .15s}
+details.pol[open] summary::after{transform:translateY(25%) rotate(-135deg)}
+@media (forced-colors:active){a[target="_blank"]::after{background:LinkText;forced-color-adjust:none}}
+details.pol summary,details.pol a{scroll-margin-top:var(--pbc,0px)}
 .pid{font:500 .8rem var(--f-mono);color:var(--accent)}
 .tag{font:500 .7rem/1 var(--f-mono);padding:4px 7px;border-radius:5px;border:1px solid var(--line);color:var(--muted);white-space:nowrap}
 .tag.yes{border-color:var(--warn);color:var(--warn)}
@@ -126,7 +144,7 @@ details.pol[open]{border-color:var(--ink)}
 .lv{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,28px);display:grid;gap:14px}
 .lv-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center}
 .lv-lab{font:500 .82rem var(--f-display);color:var(--muted)}
-.lv-top input{width:100%;accent-color:var(--glow)}
+.lv-top input{width:100%;accent-color:var(--accent)}
 .lv-stops{display:flex;justify-content:space-between;font:500 .75rem var(--f-mono);color:var(--muted);padding-inline:calc(12px + 7ch)}
 .lv-card{display:grid;gap:14px;border-top:1px solid var(--line);padding-top:14px}
 .lv-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 16px}
@@ -165,11 +183,15 @@ details.pol[open]{border-color:var(--ink)}
 .sc-body{display:grid;gap:10px;padding-top:6px}
 .cf-callout{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--glow);border-radius:14px;padding:clamp(18px,3vw,28px);display:grid;gap:10px;justify-items:start;max-width:72ch}
 .cf-q{font:700 clamp(1.2rem,2.4vw,1.5rem)/1.25 var(--f-display);text-wrap:balance}
+.sc-pause{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 0;border:0;background:none;color:var(--muted);font:500 .82rem/1 var(--f-display);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sc-pause:hover{color:var(--ink)}
+.sc-pause .ico{font-size:.7rem;text-decoration:none;display:inline-block}
 .pledge{background:var(--night);color:var(--night-ink);border-radius:18px;padding:clamp(22px,4vw,44px)}
 .pledge h2{color:var(--night-ink)}
 .pledge .eyebrow{color:var(--glow)}
 .pledge ul{display:grid;gap:10px;padding-left:1.2em;margin:0}
 .pledge a{color:var(--glow)}
+.pledge .caption{color:#B9C1D6}
 .contact{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .contact code{font:500 1rem var(--f-mono);background:var(--panel);border:1px solid var(--line);padding:8px 12px;border-radius:8px;user-select:all}
 footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 var(--f-display);color:var(--muted)}
@@ -180,10 +202,15 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   nav.links{gap:12px;font-size:.85rem}
   .pb-controls{position:static}
 }
+/* On narrow or short viewports (phones, 200-400% zoom) the wrapped nav would cover much of the screen; let it scroll away (WCAG 1.4.10, 2.4.11) */
+/* Phones: keep the header pinned but compact, with one swipeable row of links. Very short screens (heavy zoom, landscape) unpin it. */
+@media (max-width:640px){header.nav .wrap{gap:6px;padding-block:8px}nav.links{flex-wrap:nowrap;overflow-x:auto;width:100%;white-space:nowrap;gap:16px;padding-bottom:4px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}nav.links::-webkit-scrollbar{display:none}nav.links a{flex:0 0 auto}.pb-controls{position:static}}
+@media (max-height:560px){header.nav{position:static}.pb-controls{position:static}}
 </style>
 </head>
 <body>
-<div class="notice"><div class="wrap">An independent policy proposal by David Clayman and Lifesaver Labs PBC. Not affiliated with or endorsed by the State of New York. We hope New York will adopt Mission Zero and run it on an official state site.</div></div>
+<a class="skip" href="#top">Skip to main content</a>
+<aside class="notice" aria-label="Independence notice"><div class="wrap">An independent policy proposal by David Clayman and Lifesaver Labs PBC. Not affiliated with or endorsed by the State of New York. We hope New York will adopt Mission Zero and run it on an official state site.</div></aside>
 
 <header class="nav"><div class="wrap">
   <a class="brand" href="#top"><span class="dot" aria-hidden="true"></span>Mission Zero NY</a>
@@ -205,7 +232,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   </nav>
 </div></header>
 
-<main id="top">
+<main id="top" tabindex="-1">
 <section class="hero"><div class="wrap hero-grid">
   <div class="stack">
     <p class="eyebrow">A statewide goal for New York</p>
@@ -222,7 +249,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
       <div class="stat"><b>0</b><span>the goal: a statewide target, a public hub and a randomized pilot to learn what works</span></div>
     </div>
   </div>
-  <div class="headboard" aria-label="Illustration of a headboard help button">
+  <div class="headboard" role="group" aria-label="Illustration of a headboard help button">
     <div class="hb-figure">
       <svg viewBox="0 0 360 260" role="img" aria-label="A bed seen from the foot: an upholstered headboard with a small round help button at its center and a breath sensor beside it, above two pillows">
         <rect width="360" height="260" fill="#151C30"/>
@@ -249,9 +276,9 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
         <text x="60" y="50" text-anchor="start" font-family="IBM Plex Mono, monospace" font-size="10" fill="#C3CADB">help button · 4 cm</text>
       </svg>
       <button class="press" id="press" type="button" aria-describedby="press-note" aria-label="Press the help button"></button>
-      <button class="sensor" id="sensor" type="button" aria-label="Check the BAC picture on the breath sensor"></button>
+      <button class="sensor" id="sensor" type="button" aria-describedby="press-note" aria-label="Check the BAC picture on the breath sensor"></button>
     </div>
-    <div class="resp" id="press-resp" aria-live="polite">One press. Quiet check-in.</div>
+    <div class="resp" id="press-resp" role="status">One press. Quiet check-in.</div>
     <small id="press-note">A gray-zone and prepanic button at the center of the headboard, in a dorm, an apartment, a hotel or a home, in the same spot statewide like a fire extinguisher, beside a breath sensor that shows the BAC picture. Using either is always the person's choice. Tap each to try it.</small>
   </div>
 </div></section>
@@ -281,14 +308,15 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <p><b>Everyone who dates.</b> Campuses get the headlines, but most people at risk aren't students. The risk of date rape and sexual coercion, including gray-zone pressure, starts for many around senior prom and lasts through every stretch of single life: the twenties after school or instead of it, dating again after a divorce or a death, and new relationships at 50, 60 or 81. A bartender in Buffalo, a nurse on night shifts in the Bronx and a retiree on a dating app in Albany deserve the same protection as a sophomore in a dorm. Whether or not someone can afford college, wants it, or has long since finished it, they deserve a minimal bedroom safety standard.</p>
     <p>At the 20% rate at which college women report rape and sexual assault to police, someone must harm about 3 people before any report is more likely than not, and about 10 before one is nearly certain (Bureau of Justice Statistics, 1995–2013). Gray-zone pressure, such as persisting after a no, is reported far less, and no one measures it, so the lower rows below are illustrations.</p>
   </div>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Chance each person reports</th><th class="num">Harmed before a report is more likely than not</th><th class="num">Harmed before a report is 90% likely</th><th class="num">Chance of any report after 5 people</th><th class="num">After 10 people</th></tr></thead>
+  <div class="tablewrap" data-region-label="cap-reports"><table>
+    <caption id="cap-reports" class="sr-only">People harmed before a report, by the chance each person reports</caption>
+    <thead><tr><th scope="col">Chance each person reports</th><th scope="col" class="num">Harmed before a report is more likely than not</th><th scope="col" class="num">Harmed before a report is 90% likely</th><th scope="col" class="num">Chance of any report after 5 people</th><th scope="col" class="num">After 10 people</th></tr></thead>
     <tbody>
-      <tr><td>32% (non-students, assault)</td><td class="num">2</td><td class="num">6</td><td class="num">85%</td><td class="num">98%</td></tr>
-      <tr><td>20% (students, assault)</td><td class="num">3</td><td class="num">10</td><td class="num">67%</td><td class="num">89%</td></tr>
-      <tr><td>10% (illustrative)</td><td class="num">7</td><td class="num">22</td><td class="num">41%</td><td class="num">65%</td></tr>
-      <tr><td>5% (illustrative gray zone)</td><td class="num">14</td><td class="num">45</td><td class="num">23%</td><td class="num">40%</td></tr>
-      <tr><td>2% (illustrative)</td><td class="num">34</td><td class="num">114</td><td class="num">10%</td><td class="num">18%</td></tr>
+      <tr><th scope="row">32% (non-students, assault)</th><td class="num">2</td><td class="num">6</td><td class="num">85%</td><td class="num">98%</td></tr>
+      <tr><th scope="row">20% (students, assault)</th><td class="num">3</td><td class="num">10</td><td class="num">67%</td><td class="num">89%</td></tr>
+      <tr><th scope="row">10% (illustrative)</th><td class="num">7</td><td class="num">22</td><td class="num">41%</td><td class="num">65%</td></tr>
+      <tr><th scope="row">5% (illustrative gray zone)</th><td class="num">14</td><td class="num">45</td><td class="num">23%</td><td class="num">40%</td></tr>
+      <tr><th scope="row">2% (illustrative)</th><td class="num">34</td><td class="num">114</td><td class="num">10%</td><td class="num">18%</td></tr>
     </tbody>
   </table></div>
   <p class="caption col">Method: the chance of at least one report among n people is 1 − (1 − p)ⁿ, assuming each person reports independently at rate p. A report is also not a consequence: few police reports lead to arrest, reports about the same person often land at different schools or apps and never connect, and a minority of repeat offenders commit most assaults.</p>
@@ -310,9 +338,9 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <p class="eyebrow">The Semmelspan</p>
   <h2>How long we have known, and waited</h2>
   <p class="col">The Semmelspan is the time between when a problem and its fixes are made public and when the system finally acts. These clocks are still running. Each marks a moment when date rape and the means to interrupt it were put plainly in front of the country, and bedrooms still weren't built to stop it.</p>
-  <ol class="sc-list">
+  <ol class="sc-list" role="list">
 <li class="sc"><p class="sc-when">1988</p><h3><i>I Never Called It Rape</i> is published</h3><p class="sc-count">Semmelspan: <span class="sc-clock">about 38 years</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">Robin Warshaw’s Ms. report brings date and acquaintance rape on campus into public view.</p></div></details></li>
-<li class="sc"><p class="sc-when">2003–2004</p><h3>I serve in first-year student government at the University of Chicago, and miss what mattered most</h3><p class="sc-count">Semmelspan: <span class="sc-clock">about 23 years</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">As a first-year member of student government, I did no significant work or advocacy on sexual assault prevention. I didn’t adequately realize how serious, pervasive and preventable the problem was, though I certainly should have. It was then, and always has been, by far the greatest safety threat in any university community in North America, and it should have been my number one priority. Instead I spent time on all-night library access during finals week, the campus meal plan and dozens of other far less important issues.</p><p class="sc-desc">That year I also took part in a design review session for the South Campus Residence Hall, as the University was designing it and seeking community acceptance of its design standards. It opened in 2009 with 811 student beds. They asked what first-year students needed in it. I was an idiot: I failed to think about or demand a layer of safety built into the beds, bedside tables or walls for all the women and men who would live there, such as standardized gray-zone “confusion or prepanic” buttons, when I could have. The University could have tested it there. If sexual assault rates in that dorm proved lower, or if the theory was accepted as strong enough on its own (this was the University of Chicago, after all), it could have retrofitted the rest of the housing in and around campus with matching fixtures or fixed devices that balance privacy and safety.</p><p class="sc-desc">My entering class, the Class of 2007, had 1,172 first-year students. Applying the University of Chicago’s own 2019 campus climate survey rates, the closest measure available, and with 602 women and 553 men entering as first-time freshmen: about 175 of my classmates were likely sexually assaulted during college, by physical force or while unable to consent, about 80 of them by rape or attempted rape, and about 70 in our first year alone. I did barely anything to help them, or to make sure it would never happen again to the classes that came after us. As a member of student government, I had a duty to protect my peers, and I fell far short of it. I was part of the problem.</p><p class="sc-desc caption">Estimate: 602 women × 21.8% and 553 men × 7.8% since entering college; 10.4% and 3.1% for penetration, completed or attempted; 8.0% and 4.1% in the current school year. Sources: 602 women and 553 men among 1,155 first-time, degree-seeking freshmen in fall 2003, from the federal <a href="https://nces.ed.gov/ipeds/" target="_blank" rel="noopener">IPEDS fall enrollment survey</a> (the College counted 1,172 first-years in all); class size from the College’s <a href="https://college.uchicago.edu/sites/default/files/documents/Boyer_OccasionalPapers_V12.pdf" target="_blank" rel="noopener">Boyer Occasional Papers, vol. 12</a>; rates from the <a href="https://cpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/6/294/files/2019/10/2019-Campus-Climate-Survey-Results.pdf" target="_blank" rel="noopener">University of Chicago’s 2019 AAU Campus Climate Survey report</a>, tables 3.1 and 3.3. The 2019 rates are applied to a 2003 class, and “since entering college” covers students partway through college, so the four-year figure is likely an undercount.</p><p class="sc-desc">The University kept building. Each of these halls could have been designed with the features I failed to imagine in 2003–2004, or that I directly, actively and energetically proposed starting in 2015:</p><div class="tablewrap"><table aria-label="University of Chicago residence halls built since 2003">
+<li class="sc"><p class="sc-when">2003–2004</p><h3>I serve in first-year student government at the University of Chicago, and miss what mattered most</h3><p class="sc-count">Semmelspan: <span class="sc-clock">about 23 years</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">As a first-year member of student government, I did no significant work or advocacy on sexual assault prevention. I didn’t adequately realize how serious, pervasive and preventable the problem was, though I certainly should have. It was then, and always has been, by far the greatest safety threat in any university community in North America, and it should have been my number one priority. Instead I spent time on all-night library access during finals week, the campus meal plan and dozens of other far less important issues.</p><p class="sc-desc">That year I also took part in a design review session for the South Campus Residence Hall, as the University was designing it and seeking community acceptance of its design standards. It opened in 2009 with 811 student beds. They asked what first-year students needed in it. I was an idiot: I failed to think about or demand a layer of safety built into the beds, bedside tables or walls for all the women and men who would live there, such as standardized gray-zone “confusion or prepanic” buttons, when I could have. The University could have tested it there. If sexual assault rates in that dorm proved lower, or if the theory was accepted as strong enough on its own (this was the University of Chicago, after all), it could have retrofitted the rest of the housing in and around campus with matching fixtures or fixed devices that balance privacy and safety.</p><p class="sc-desc">My entering class, the Class of 2007, had 1,172 first-year students. Applying the University of Chicago’s own 2019 campus climate survey rates, the closest measure available, and with 602 women and 553 men entering as first-time freshmen: about 175 of my classmates were likely sexually assaulted during college, by physical force or while unable to consent, about 80 of them by rape or attempted rape, and about 70 in our first year alone. I did barely anything to help them, or to make sure it would never happen again to the classes that came after us. As a member of student government, I had a duty to protect my peers, and I fell far short of it. I was part of the problem.</p><p class="sc-desc caption">Estimate: 602 women × 21.8% and 553 men × 7.8% since entering college; 10.4% and 3.1% for penetration, completed or attempted; 8.0% and 4.1% in the current school year. Sources: 602 women and 553 men among 1,155 first-time, degree-seeking freshmen in fall 2003, from the federal <a href="https://nces.ed.gov/ipeds/" target="_blank" rel="noopener">IPEDS fall enrollment survey<span class="sr-only"> (opens in new tab)</span></a> (the College counted 1,172 first-years in all); class size from the College’s <a href="https://college.uchicago.edu/sites/default/files/documents/Boyer_OccasionalPapers_V12.pdf" target="_blank" rel="noopener">Boyer Occasional Papers, vol. 12<span class="sr-only"> (opens in new tab)</span></a>; rates from the <a href="https://cpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/6/294/files/2019/10/2019-Campus-Climate-Survey-Results.pdf" target="_blank" rel="noopener">University of Chicago’s 2019 AAU Campus Climate Survey report<span class="sr-only"> (opens in new tab)</span></a>, tables 3.1 and 3.3. The 2019 rates are applied to a 2003 class, and “since entering college” covers students partway through college, so the four-year figure is likely an undercount.</p><p class="sc-desc">The University kept building. Each of these halls could have been designed with the features I failed to imagine in 2003–2004, or that I directly, actively and energetically proposed starting in 2015:</p><div class="tablewrap"><table aria-label="University of Chicago residence halls built since 2003">
     <thead><tr><th scope="col">Hall</th><th scope="col">Opened</th><th scope="col" class="num">Beds</th><th scope="col">Location and notes</th></tr></thead>
     <tbody>
       <tr><th scope="row">South Campus Residence Hall</th><td>2009</td><td class="num">811</td><td>Ellis Ave. between 60th and 61st Sts., beside Burton-Judson.</td></tr>
@@ -321,7 +349,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     </tbody>
   </table></div><p class="sc-desc">Sexual assaults in all these buildings rest on my head. In the buildings built since 2015, the administrators who approved them also share in the failure to build these protections in, after I tried to explain why they were very necessary.</p></div></details></li>
 <li class="sc"><p class="sc-when">September 19, 2014</p><h3>“It’s On Us” launches at the White House</h3><p class="sc-count">Semmelspan: <span class="sc-clock" data-y="2014" data-m="8" data-d="19">12 years, 44 days</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">President Obama and Vice President Biden launch the national campaign against campus sexual assault.</p></div></details></li>
-<li class="sc"><p class="sc-when">October 1, 2014</p><h3>I describe an early version of this system to the Small Business Development Center</h3><p class="sc-count">Semmelspan: <span class="sc-clock" data-y="2014" data-m="9" data-d="1">12 years, 32 days</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">I presented a rudimentary hardware version of a safeword-sensitive dorm safety system to the Small Business Development Center, under the auspices of the U.S. Small Business Administration, at the University Heights Library Business Development Center. The system has evolved far beyond that version since, into the privacy levels, software and tools described on this page. <a href="https://www.youtube.com/watch?v=xAL0qQuK4AY" target="_blank" rel="noopener">Watch the recording</a>.</p></div></details></li>
+<li class="sc"><p class="sc-when">October 1, 2014</p><h3>I describe an early version of this system to the Small Business Development Center</h3><p class="sc-count">Semmelspan: <span class="sc-clock" data-y="2014" data-m="9" data-d="1">12 years, 32 days</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">I presented a rudimentary hardware version of a safeword-sensitive dorm safety system to the Small Business Development Center, under the auspices of the U.S. Small Business Administration, at the University Heights Library Business Development Center. The system has evolved far beyond that version since, into the privacy levels, software and tools described on this page. <a href="https://www.youtube.com/watch?v=xAL0qQuK4AY" target="_blank" rel="noopener">Watch the recording<span class="sr-only"> (opens in new tab)</span></a>.</p></div></details></li>
 <li class="sc"><p class="sc-when">September 21, 2015</p><h3>The first major AAU Campus Climate Survey is released</h3><p class="sc-count">Semmelspan: <span class="sc-clock" data-y="2015" data-m="8" data-d="21">11 years, 42 days</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">The Association of American Universities publishes results from students at 27 universities.</p></div></details></li>
 <li class="sc"><p class="sc-when">July 7, 2016</p><h3>My application is published</h3><p class="sc-count">Semmelspan: <span class="sc-clock" data-y="2016" data-m="6" data-d="7">10 years, 118 days</span></p><details class="sc-more"><summary>Read more</summary><div class="sc-body"><p class="sc-desc">U.S. Pub. No. 2016/0196735, filed under the name Adam Clayman, becomes public.</p></div></details></li>
   </ol>
@@ -352,7 +380,8 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <label for="q" class="caption">Search the proposals</label>
     <input id="q" class="search" type="search" placeholder="Try “safeword”, “Clery”, “locks”" autocomplete="off">
     <div class="chips" id="chips" role="group" aria-label="Filter by theme"></div>
-    <div class="pb-count" id="pbcount" aria-live="polite"></div>
+    <div class="pb-count" id="pbcount"></div>
+    <div class="sr-only" id="pbstatus" role="status"></div>
   </div>
   <div id="pb"></div>
 </div></section>
@@ -361,14 +390,15 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <h2>The first statewide Mission Zero trial</h2>
   <p class="col">New York would be the first state to run Mission Zero statewide: a three-year, campus-randomized trial across participating colleges and training programs, testing which combinations of policy, environment and technology cut sexual assault the most per dollar. Each arm adds a layer to the one before, so the state sees what each added step buys. Its size follows what New York chooses to include, and a focused start can be inexpensive.</p>
   <p class="col"><b>Campuses are where the trial starts, not where the problem ends.</b> Schools can randomize, survey and measure in ways the wider public can't, so they make the cleanest first test. What works there is meant to reach everyone who dates: the same button, safeword and check-ins in rentals, hotels, homes and dating apps, for New Yorkers who never enrolled or graduated decades ago.</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Arm</th><th>What campuses get</th><th>Main proposals</th><th>Added cost</th></tr></thead>
+  <div class="tablewrap" data-region-label="cap-arms"><table>
+    <caption id="cap-arms" class="sr-only">Pilot trial arms</caption>
+    <thead><tr><th scope="col">Arm</th><th scope="col">What campuses get</th><th scope="col">Main proposals</th><th scope="col">Added cost</th></tr></thead>
     <tbody>
-      <tr><td>0 · Comparison</td><td>Current practice, plus the shared measurement every arm gets</td><td>P-46, P-54, P-50</td><td>Survey and reporting only</td></tr>
-      <tr><td>1 · Culture and education</td><td>Ask-first norms, a first-weeks course, group-chat ethics, resistance and bystander training, a confidential help line</td><td>P-19–P-23, P-27, P-44</td><td>Low: staff time and curriculum</td></tr>
-      <tr><td>2 · Plus safer parties</td><td>Sentinel-event triggers, breath testing and served-guest marking, drink-test strips and chapter scorecards</td><td>P-32–P-38</td><td>Low: mostly policy</td></tr>
-      <tr><td>3 · Plus touch-and-voice basics</td><td>A headboard button in a standard spot in every student bed, room-level location, phone-SOS training and secure locks</td><td>P-39, P-43, P-84</td><td>One-time: about $20 per button, reused with the bed, plus lock retrofits</td></tr>
-      <tr><td>4 · Full integrated platform</td><td>On-device stop-word detection on students' own phones, signals routed to trained peer responders, morning-after check-ins</td><td>P-44, P-45, P-76–P-78</td><td>Low per student; ongoing cost is mostly trained responders</td></tr>
+      <tr><th scope="row">0 · Comparison</th><td>Current practice, plus the shared measurement every arm gets</td><td>P-46, P-54, P-50</td><td>Survey and reporting only</td></tr>
+      <tr><th scope="row">1 · Culture and education</th><td>Ask-first norms, a first-weeks course, group-chat ethics, resistance and bystander training, a confidential help line</td><td>P-19–P-23, P-27, P-44</td><td>Low: staff time and curriculum</td></tr>
+      <tr><th scope="row">2 · Plus safer parties</th><td>Sentinel-event triggers, breath testing and served-guest marking, drink-test strips and chapter scorecards</td><td>P-32–P-38</td><td>Low: mostly policy</td></tr>
+      <tr><th scope="row">3 · Plus touch-and-voice basics</th><td>A headboard button in a standard spot in every student bed, room-level location, phone-SOS training and secure locks</td><td>P-39, P-43, P-84</td><td>One-time: about $20 per button, reused with the bed, plus lock retrofits</td></tr>
+      <tr><th scope="row">4 · Full integrated platform</th><td>On-device stop-word detection on students' own phones, signals routed to trained peer responders, morning-after check-ins</td><td>P-44, P-45, P-76–P-78</td><td>Low per student; ongoing cost is mostly trained responders</td></tr>
     </tbody>
   </table></div>
   <ul class="plain col">
@@ -382,7 +412,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <p class="eyebrow">Privacy</p>
   <h2>A slightly different balance, with hard guarantees</h2>
   <p class="col">This asks people who date to accept a button above every bed and a phone that listens for one word. We accepted smoke detectors in every bedroom because they do one job and report nothing else. Safety tech for the bedroom has to meet that bar, in law and in code.</p>
-  <ul class="guarantees">
+  <ul class="guarantees" role="list">
     <li>Detection happens on the device, including reading the affirmative signals of the consent envelope. Nothing is recorded or sent unless the person triggers it.</li>
     <li>Open standards with several certified vendors, so no single company controls the system.</li>
     <li>Published data flows and verifiable builds, so anyone can check the software does only what it says.</li>
@@ -399,11 +429,11 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <p class="col">Every bedroom gets the same baseline, and each person chooses how much more to turn on. Slide from the least processing to the most. Each step adds what the room can notice, and asks for more trust in local, on-device processing. Nothing at any level is recorded or sent unless someone asks for help.</p>
   <div class="lv">
     <div class="lv-top">
-      <label for="lvl" class="lv-lab">Least processing</label>
-      <input type="range" id="lvl" min="1" max="6" step="1" value="1" aria-valuemin="1" aria-valuemax="6" aria-describedby="lv-name">
-      <span class="lv-lab right">Most processing</span>
+      <span class="lv-lab" id="lv-min">Least processing</span>
+      <input type="range" id="lvl" min="1" max="6" step="1" value="1" aria-label="Privacy and capability level" aria-describedby="lv-min lv-max">
+      <span class="lv-lab right" id="lv-max">Most processing</span>
     </div>
-        <div class="lv-card" aria-live="polite">
+        <div class="lv-card">
       <div class="lv-head"><span class="lv-num" id="lv-num">Level 1</span><h3 id="lv-name">Gray-zone button</h3><span class="lv-trust" id="lv-trust">Trust needed: minimal</span></div>
       <div class="lv-meter" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <dl class="lv-grid">
@@ -420,8 +450,8 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
           <li><b>Deeper reading:</b> a private on-device model interprets how things are going from how partners interact, never from body signals alone.</li>
           <li><b>Private intimacy coordinator:</b> at the far end, an electronic intimacy coordinator you can talk to beforehand to scope out what you want and don't want, which then supports you to the max during the moment, all on the device.</li>
         </ul>
-        <p class="caption">How the envelope carries consent: the music's loudness follows the quietest partner's affirmations.</p>
-        <div class="tablewrap" style="border:0;background:transparent">
+        <p class="caption" id="lv-env-cap">How the envelope carries consent: the music's loudness follows the quietest partner's affirmations.</p>
+        <div class="tablewrap" style="border:0;background:transparent" data-region-label="lv-env-cap">
         <svg viewBox="0 0 600 170" role="img" aria-label="Music volume over a session: steady while both affirm, dipping at a private pause, fading at a yellow flag, and dropping to silence at a red flag, after which a help call is placed only if there is no answer.">
           <line x1="20" y1="130" x2="590" y2="130" class="ax"/>
           <g id="lv-bars"></g>
@@ -442,9 +472,10 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <p class="col">Much of a Mission Zero setup can be assembled today from products other companies already sell. Every setup should offer both a touch path and a voice path: voice works when hands are held or a phone is out of reach, and touch works when speaking is unsafe. Mission Zero's standards are open, so any of these can be certified and used.</p>
   <p class="col"><b>No new hardware required.</b> Every piece can be off the shelf: phones, watches, smart speakers, programmable buttons and breath sensors that are already sold today. New hardware engineering is the slowest and hardest part of any safety system, harder than software and platform integration, and Mission Zero doesn't depend on it. What holds this back is focus: a community spotlight, and intense cooperation among industry and institutions, both collaborative and competitive, aimed at the Mission Zero goal. It takes a willingness to take responsibility for the engineering fixes, and to withstand sometimes wild public criticism and early rejection while public understanding matures, until everyone is comfortable with minimally invasive, privacy-centered "bedroom seatbelt" technology for high-voltage moments across the hot-cold empathy gap.</p>
   <p class="col"><b>Why platforms wait.</b> The first-mover problem that keeps one campus from adding bedroom safety features also holds back the biggest platforms. A company like Amazon may not want to be the one to spearhead a universal, freely available bedroom safeword on every Alexa device owned by Prime members, possibly for fear of an unpredictable customer backlash or boycott spilling over onto its core shopping business. No company wants to move alone on this, and no individual inventor or small business can make a platform prioritize options to prevent sexual assault in Prime members' bedrooms, students or not, however clearly the need and the capacity are laid out. That changes when Prime members, institutions, the public and the New York State Assembly ask for it together.</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Product</th><th>Touch</th><th>Voice</th><th>What it does</th><th>Cost</th></tr></thead>
-    <tbody><tr><td><b>Phone emergency SOS (iPhone, Android)</b></td><td>Repeated side-button presses</td><td>“Hey Siri” or “Hey Google, call 911”</td><td>Calls 911 and texts emergency contacts with location</td><td>Free, already owned</td></tr><tr><td><b>Smartwatch SOS</b></td><td>Button hold; fall detection</td><td>Assistant voice command</td><td>Calls 911 from the wrist when the phone is out of reach</td><td>Free, already owned</td></tr><tr><td><b>Programmable panic button, such as Flic</b></td><td>Single, double or held press, each mapped to a different action</td><td>None</td><td>Sends a text, push alert or SOS with location; hubs can give room-level location</td><td>About $20 each</td></tr><tr><td><b>AI voice button: Flic Cue</b></td><td>Press, double press, hold, swipe or turn, each mapped to a different action</td><td>Hold and speak; the microphone is on only while held</td><td>Can be set up as an AI-sensitive prepanic button: a whispered “I want to leave” can start a quiet check-in or a ride, while “get help now” escalates to an alarm. Routes speech to messages, a webhook or an AI agent through a nearby phone, computer or Flic Hub. Processing appears to be cloud-based, so it should not be the only path</td><td>Kickstarter from November 2026, shipping February 2027; price not yet listed</td></tr><tr><td><b>Safety jewelry: invisaWear</b></td><td>Discreet press on the jewelry</td><td>Secret phrase through its app</td><td>Alerts emergency contacts; a subscription adds 24/7 ADT agents who can send help</td><td>$129, plus an optional $11.99 a month</td></tr><tr><td><b>Phone-free wearable: Loris SOS, as a bracelet, scrunchie or keychain</b></td><td>Press both side buttons together; five clicks skips the delay</td><td>None</td><td>After a cancelable 30-second countdown, alerts 911 with name, location and floor; no passive tracking; works without a phone</td><td>University pilots and a consumer waitlist; price not yet listed</td></tr><tr><td><b>Smart speaker emergency service: Alexa Emergency Assist</b></td><td>None</td><td>“Alexa, call for help”</td><td>Connects to a 24/7 agent who can dispatch police, fire or EMS; cloud-based, so it fails offline</td><td>$5.99 a month</td></tr><tr><td><b>Campus safety apps, such as Rave Guardian and LiveSafe</b></td><td>In-app panic and timer</td><td>Varies</td><td>School-run alerts, safety timers and anonymous tips. Built mainly for “stranger danger,” such as muggings or assaults while walking home, and generally very poorly designed for bedroom intimacy safety: the assaults by peers that happen in encounters that may have started with consensual physical contact and then went off the rails</td><td>Institutional license</td></tr><tr><td><b>Safer Yes (Safeword) and Neighbor 911, by Lifesaver Labs</b></td><td>Touch fallback, prepanic and app alerts</td><td>On-device stop words and affirmation windows</td><td>Lapse leads to a check-in, alarm and help without the cloud; alerts route to vetted nearby responders</td><td>In development</td></tr></tbody>
+  <div class="tablewrap" data-region-label="cap-market"><table>
+    <caption id="cap-market" class="sr-only">Tools on the market or coming soon</caption>
+    <thead><tr><th scope="col">Product</th><th scope="col">Touch</th><th scope="col">Voice</th><th scope="col">What it does</th><th scope="col">Cost</th></tr></thead>
+    <tbody><tr><th scope="row"><b>Phone emergency SOS (iPhone, Android)</b></th><td>Repeated side-button presses</td><td>“Hey Siri” or “Hey Google, call 911”</td><td>Calls 911 and texts emergency contacts with location</td><td>Free, already owned</td></tr><tr><th scope="row"><b>Smartwatch SOS</b></th><td>Button hold; fall detection</td><td>Assistant voice command</td><td>Calls 911 from the wrist when the phone is out of reach</td><td>Free, already owned</td></tr><tr><th scope="row"><b>Programmable panic button, such as Flic</b></th><td>Single, double or held press, each mapped to a different action</td><td>None</td><td>Sends a text, push alert or SOS with location; hubs can give room-level location</td><td>About $20 each</td></tr><tr><th scope="row"><b>AI voice button: Flic Cue</b></th><td>Press, double press, hold, swipe or turn, each mapped to a different action</td><td>Hold and speak; the microphone is on only while held</td><td>Can be set up as an AI-sensitive prepanic button: a whispered “I want to leave” can start a quiet check-in or a ride, while “get help now” escalates to an alarm. Routes speech to messages, a webhook or an AI agent through a nearby phone, computer or Flic Hub. Processing appears to be cloud-based, so it should not be the only path</td><td>Kickstarter from November 2026, shipping February 2027; price not yet listed</td></tr><tr><th scope="row"><b>Safety jewelry: invisaWear</b></th><td>Discreet press on the jewelry</td><td>Secret phrase through its app</td><td>Alerts emergency contacts; a subscription adds 24/7 ADT agents who can send help</td><td>$129, plus an optional $11.99 a month</td></tr><tr><th scope="row"><b>Phone-free wearable: Loris SOS, as a bracelet, scrunchie or keychain</b></th><td>Press both side buttons together; five clicks skips the delay</td><td>None</td><td>After a cancelable 30-second countdown, alerts 911 with name, location and floor; no passive tracking; works without a phone</td><td>University pilots and a consumer waitlist; price not yet listed</td></tr><tr><th scope="row"><b>Smart speaker emergency service: Alexa Emergency Assist</b></th><td>None</td><td>“Alexa, call for help”</td><td>Connects to a 24/7 agent who can dispatch police, fire or EMS; cloud-based, so it fails offline</td><td>$5.99 a month</td></tr><tr><th scope="row"><b>Campus safety apps, such as Rave Guardian and LiveSafe</b></th><td>In-app panic and timer</td><td>Varies</td><td>School-run alerts, safety timers and anonymous tips. Built mainly for “stranger danger,” such as muggings or assaults while walking home, and generally very poorly designed for bedroom intimacy safety: the assaults by peers that happen in encounters that may have started with consensual physical contact and then went off the rails</td><td>Institutional license</td></tr><tr><th scope="row"><b>Safer Yes (Safeword) and Neighbor 911, by Lifesaver Labs</b></th><td>Touch fallback, prepanic and app alerts</td><td>On-device stop words and affirmation windows</td><td>Lapse leads to a check-in, alarm and help without the cloud; alerts route to vetted nearby responders</td><td>In development</td></tr></tbody>
   </table></div>
   <p class="col"><b>A button that understands.</b> Most panic buttons know one thing: that they were pressed. A hold-to-talk AI button like the Flic Cue can also tell a gray-zone moment from an emergency, so a whispered “I’m not sure about this” gets a private check-in instead of a 911 call, and a clear call for help skips straight to one. Because the microphone listens only while the button is held, it adds understanding without an always-on ear. It fits naturally at the center of the headboard, as the touch and voice path in one device.</p>
   <p class="caption col">Prices and availability as last checked; confirm with each company. Listing a product is not an endorsement, and none of these companies is affiliated with Mission Zero NY.</p>
@@ -477,7 +508,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
       <p>Some mechanisms here are covered by U.S. Patent No. 12,347,301 and by provisional patent applications. A provisional is a one-year placeholder no examiner has reviewed, and many of those claims may never become a full application.</p>
       <p>The cautionary tale is SawStop. A table saw that stops its blade on contact with skin went on sale in 2004, after manufacturers turned down its inventor's licensing offers. Manufacturers later cited its patents in fighting a federal safety standard, and more than 20 years on that standard is still not in force, while about 30,000 table-saw injuries a year needed medical treatment, about 4,000 of them amputations. A patent thicket in this field could let hundreds of thousands of preventable assaults happen nationally.</p>
       <p>The better model is the three-point seatbelt. Nils Bohlin designed it at Volvo, which patented it in 1959 and then left the design open for every carmaker to use. Some of the claims behind this work, together with a few other inventors' claims in this field, may matter as much for bedroom and intimate safety as that patent did for cars. That is why they must not become a toll booth.</p>
-      <p>Another inventor holds a related patent, <a href="https://patents.justia.com/patent/12512094" target="_blank" rel="noopener">U.S. Patent No. 12,512,094</a>, on scoring consent from speech and sensor data. In my view its claims don't reach the baseline proposed here, since recognizing one fixed safe phrase computes no consent score, and I've prepared a request for the Patent Office to reexamine it. That is my position, not a legal determination; the State should get its own review.</p>
+      <p>Another inventor holds a related patent, <a href="https://patents.justia.com/patent/12512094" target="_blank" rel="noopener">U.S. Patent No. 12,512,094<span class="sr-only"> (opens in new tab)</span></a>, on scoring consent from speech and sensor data. In my view its claims don't reach the baseline proposed here, since recognizing one fixed safe phrase computes no consent score, and I've prepared a request for the Patent Office to reexamine it. That is my position, not a legal determination; the State should get its own review.</p>
       <ul>
         <li>Anything here that turns out to be my invention will be licensed on low-cost, fair, reasonable and non-discriminatory (FRAND) terms, to industry, institutions and other innovators alike.</li>
         <li>Where price would otherwise block adoption, by industry or by a trial community such as Cornell, the SUNY system or the State of New York, I'll go lower: roughly the cost of the patent filings plus two years of forgone salary, or much less.</li>
@@ -485,7 +516,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
       </ul>
       <p>Sexual assault costs the United States about $3.1 trillion over survivors' lifetimes (2014 dollars; Peterson and colleagues, 2017) and makes a woman six times more likely to attempt suicide (Davidson and colleagues, 1996). Fair licensing should let me build a team and fund further experiments against harms like these. When those goals conflict with adoption, adoption wins.</p>
       <p>— David Clayman</p>
-      <p class="caption" id="patent-notice"><b>Patents and licensing.</b> The consent and personal-safety technologies described on this site, including Safeword (also called Safer Yes), are protected by U.S. Patent No. 12,347,301 B1 and are the subject of pending patent applications. These include International Application No. PCT/US25/32618 and U.S. Provisional Patent Application Nos. 64/182,340, 64/183,657, 64/189,542 and 64/190,434, and further U.S. applications are pending. Related neighborhood emergency-response technology (Neighbor 911) is the subject of U.S. Provisional Patent Application No. 64/016,800 and other pending applications. The patent and applications belong to Lifesaver Labs Public Benefit Corporation and its founder, David Morris Clayman. Products and services that practice these inventions will list the patents that cover them at <a href="https://lifesaverlabs.org/patents" target="_blank" rel="noopener">lifesaverlabs.org/patents</a>. To speed the prevention of sexual assault, Lifesaver Labs will license these inventions on fair, reasonable and nondiscriminatory terms at low cost, and on lower terms where cost would stand in the way of adoption, with only a few exceptions, none of which would block adoption of these proposals in the State of New York. Nothing on this site grants a license. Licensing inquiries: <a href="mailto:david@lifesaverlabs.org">david@lifesaverlabs.org</a>.</p>
+      <p class="caption" id="patent-notice"><b>Patents and licensing.</b> The consent and personal-safety technologies described on this site, including Safeword (also called Safer Yes), are protected by U.S. Patent No. 12,347,301 B1 and are the subject of pending patent applications. These include International Application No. PCT/US25/32618 and U.S. Provisional Patent Application Nos. 64/182,340, 64/183,657, 64/189,542 and 64/190,434, and further U.S. applications are pending. Related neighborhood emergency-response technology (Neighbor 911) is the subject of U.S. Provisional Patent Application No. 64/016,800 and other pending applications. The patent and applications belong to Lifesaver Labs Public Benefit Corporation and its founder, David Morris Clayman. Products and services that practice these inventions will list the patents that cover them at <a href="https://lifesaverlabs.org/patents" target="_blank" rel="noopener">lifesaverlabs.org/patents<span class="sr-only"> (opens in new tab)</span></a>. To speed the prevention of sexual assault, Lifesaver Labs will license these inventions on fair, reasonable and nondiscriminatory terms at low cost, and on lower terms where cost would stand in the way of adoption, with only a few exceptions, none of which would block adoption of these proposals in the State of New York. Nothing on this site grants a license. Licensing inquiries: <a href="mailto:david@lifesaverlabs.org">david@lifesaverlabs.org</a>.</p>
     </div>
   </div>
 </div></section>
@@ -495,7 +526,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <div class="col stack">
     <p>Mission Zero NY is about every kind of sexual assault in New York, with a special focus on date and acquaintance rape and other sexual coercion, even in the gray zone. It starts with campuses because they can run the statewide pilot and measure results, but it is written for every New Yorker who dates, students or not, from senior prom to 81 and beyond, and most of its proposals reach them all. It was written by David Clayman, founder and CEO of Lifesaver Labs PBC, a public benefit corporation that builds consent and emergency-response technology, including the Safeword (Safer Yes) consent system and Neighbor 911. Every proposal where Lifesaver Labs could benefit is marked, and Lifesaver Labs would have no role in evaluating any pilot.</p>
     <p>The goal is for New York to take this up as its own, carrying MissionZeroNY.org forward as a State-run hub, and then to invite other states through an interstate compact to run the experiment with it, driving rates lower and lower. Legislators, campus leaders, survivors, advocates, researchers and engineers are all welcome to argue with it, improve it and help test it.</p>
-    <div class="contact"><code id="email">david@lifesaverlabs.org</code><button class="btn" id="copy" type="button">Copy email</button></div>
+    <div class="contact"><code id="email">david@lifesaverlabs.org</code><button class="btn" id="copy" type="button">Copy email</button><span class="sr-only" id="copy-status" role="status"></span></div>
   </div>
 </div></section>
 <section id="zero"><div class="wrap">
@@ -518,12 +549,12 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   var DATA = JSON.parse(document.getElementById('pdata').textContent);
   var themes = DATA.themes, pols = DATA.policies;
   var pb = document.getElementById('pb'), chips = document.getElementById('chips');
-  var q = document.getElementById('q'), countEl = document.getElementById('pbcount');
+  var q = document.getElementById('q'), countEl = document.getElementById('pbcount'), statusEl = document.getElementById('pbstatus'), announceT;
   document.getElementById('pcount').textContent = pols.length;
   var active = 'all';
   function esc(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
   function linkify(s){return esc(s).replace(/P-(\d{2,3})\b/g,function(m,n){var id='P-'+(n.length<2?'0'+n:n);return '<a href="#'+id.toLowerCase()+'" data-p="'+id+'">'+m+'</a>';});}
-  function mkChip(key,label){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=label;b.setAttribute('aria-pressed',key===active?'true':'false');b.addEventListener('click',function(){active=key;Array.prototype.forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false');});b.setAttribute('aria-pressed','true');render();});chips.appendChild(b);}
+  function mkChip(key,label){var b=document.createElement('button');b.type='button';b.className='chip';b.textContent=label;b.setAttribute('aria-pressed',key===active?'true':'false');b.addEventListener('click',function(){active=key;Array.prototype.forEach.call(chips.children,function(c){c.setAttribute('aria-pressed','false');});b.setAttribute('aria-pressed','true');announce(render(),100);});chips.appendChild(b);}
   mkChip('all','All themes');
   Object.keys(themes).forEach(function(k){mkChip(k,k+' · '+themes[k]);});
   function render(){
@@ -544,24 +575,34 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     if(last!==null) html+='</div>';
     pb.innerHTML = shown? html : '<p class="caption">No proposals match. Try a shorter word, or choose All themes.</p>';
     countEl.textContent = shown===pols.length ? 'Showing all '+shown+' proposals' : 'Showing '+shown+' of '+pols.length+' proposals';
+    return shown;
   }
-  q.addEventListener('input',render);
+  /* Announce the result count once typing pauses, not on every keystroke; include the no-match message. */
+  function announce(shown,delay){clearTimeout(announceT); announceT=setTimeout(function(){
+    statusEl.textContent = countEl.textContent + (shown? '.' : '. No proposals match. Try a shorter word, or choose All themes.');},delay);}
+  q.addEventListener('input',function(){announce(render(),600);});
   render();
   function openPolicy(id){
     if(!document.getElementById(id.toLowerCase())){ active='all'; q.value=''; Array.prototype.forEach.call(chips.children,function(c,i){c.setAttribute('aria-pressed',i===0?'true':'false');}); render(); }
     var el=document.getElementById(id.toLowerCase()); if(!el) return;
     el.open=true; el.scrollIntoView({block:'center'}); el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash');
+    /* move keyboard and screen-reader focus to the opened proposal (scrolling above already follows reduced-motion via html scroll-behavior) */
+    var sm=el.querySelector('summary'); if(sm) sm.focus({preventScroll:true});
   }
   document.addEventListener('click',function(e){var a=e.target.closest('a[data-p]'); if(!a) return; e.preventDefault(); openPolicy(a.getAttribute('data-p')); try{history.replaceState(null,'','#'+a.getAttribute('data-p').toLowerCase());}catch(_){}});
   function fromHash(){var h=location.hash.slice(1); if(/^p-\d+$/.test(h)) openPolicy(h.toUpperCase());}
-  window.addEventListener('hashchange',fromHash); fromHash();
+  /* initial deep link runs after load: the browser's own fragment navigation would otherwise blur the focused summary */
+  window.addEventListener('hashchange',fromHash); if(document.readyState==='complete') fromHash(); else window.addEventListener('load',fromHash);
   var steps=['One press. Quiet check-in.','Check-in sent to their phone and watch.','No answer: a trained responder is alerted with the room number.','Still no answer: campus safety or 911 gets room-level location.'];
   var i=0, resp=document.getElementById('press-resp');
-  document.getElementById('sensor').addEventListener('click',function(){resp.textContent='BAC picture: 0.06 and rising. Not able to consent now. Projected under 0.05 at 1:40 a.m.';});
-  document.getElementById('press').addEventListener('click',function(){i=(i+1)%steps.length; resp.textContent=steps[i]; var f=document.querySelector('.hb-figure'); f.classList.remove('lit'); void f.offsetWidth; if(i>0) f.classList.add('lit');});
-  document.getElementById('copy').addEventListener('click',function(){var b=this,t=document.getElementById('email').textContent;
-    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected, press copy';}
-    try{navigator.clipboard.writeText(t).then(function(){b.textContent='Copied';},sel);}catch(_){sel();}});
+  /* clear then set, so repeating the same message is still announced by the status region */
+  function say(t){resp.textContent=''; setTimeout(function(){resp.textContent=t;},50);}
+  document.getElementById('sensor').addEventListener('click',function(){say('BAC picture: 0.06 and rising. Not able to consent now. Projected under 0.05 at 1:40 a.m.');});
+  document.getElementById('press').addEventListener('click',function(){i=(i+1)%steps.length; say(steps[i]); var f=document.querySelector('.hb-figure'); f.classList.remove('lit'); void f.offsetWidth; if(i>0) f.classList.add('lit');});
+  document.getElementById('copy').addEventListener('click',function(){var b=this,t=document.getElementById('email').textContent,st=document.getElementById('copy-status');
+    function done(msg){b.textContent=msg; st.textContent=''; setTimeout(function(){st.textContent=msg;},50); clearTimeout(b._t); b._t=setTimeout(function(){b.textContent='Copy email';},3000);}
+    function sel(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);done('Selected, press copy');}
+    try{navigator.clipboard.writeText(t).then(function(){done('Copied');},sel);}catch(_){sel();}});
 })();
 
   (function(){
@@ -583,18 +624,47 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     function show(){var i=+r.value-1,o=L[i];
       el.num.textContent='Level '+(i+1); el.name.textContent=o.n; el.trust.textContent='Trust needed: '+o.t;
       el.does.textContent=o.d; el.proc.textContent=o.p; el.priv.textContent=o.v; el.catch.textContent=o.c;
-      r.setAttribute('aria-valuetext','Level '+(i+1)+': '+o.n);
+      r.setAttribute('aria-valuetext','Level '+(i+1)+' of 6: '+o.n+'. Trust needed: '+o.t);
       Array.prototype.forEach.call(meter,function(m,j){m.classList.toggle('on',j<=i);});
       env.hidden = i<5;}
     r.addEventListener('input',show); show();
   })();
   (function(){var cs=document.querySelectorAll('.sc-clock[data-y]');if(!cs.length)return;
+    /* Clocks are not a live region. They tick each second, or each minute without seconds under prefers-reduced-motion,
+       and a Pause button stops them (WCAG 2.2.2 Pause, Stop, Hide). */
+    var mq=window.matchMedia?matchMedia('(prefers-reduced-motion: reduce)'):{matches:false}, timer=null, paused=false;
     function pad(n){return n<10?'0'+n:''+n;}
-    function tick(){var now=new Date();Array.prototype.forEach.call(cs,function(c){var y=+c.dataset.y,m=+c.dataset.m,d=+c.dataset.d;
+    function tick(){var now=new Date(), slow=mq.matches;Array.prototype.forEach.call(cs,function(c){var y=+c.dataset.y,m=+c.dataset.m,d=+c.dataset.d;
       var yrs=now.getFullYear()-y; var ann=new Date(y+yrs,m,d); if(ann>now){yrs--;ann=new Date(y+yrs,m,d);}
       var ms=now-ann, days=Math.floor(ms/86400000), r=ms%86400000;
-      c.textContent=yrs+' years, '+days+' days, '+pad(Math.floor(r/3600000))+':'+pad(Math.floor(r%3600000/60000))+':'+pad(Math.floor(r%60000/1000));});}
-    tick(); setInterval(tick,1000);})();
+      c.textContent=yrs+' years, '+days+' days, '+pad(Math.floor(r/3600000))+':'+pad(Math.floor(r%3600000/60000))+(slow?'':':'+pad(Math.floor(r%60000/1000)));});}
+    function schedule(){clearTimeout(timer); if(paused) return; tick();
+      var now=new Date(), wait=mq.matches? 60000-(now.getSeconds()*1000+now.getMilliseconds()) : 1000-now.getMilliseconds();
+      timer=setTimeout(schedule,wait+20);}
+    if(mq.addEventListener) mq.addEventListener('change',schedule); else if(mq.addListener) mq.addListener(schedule);
+    var list=document.querySelector('.sc-list'), btn=document.createElement('button');
+    btn.type='button'; btn.className='sc-pause';
+    function label(){btn.innerHTML=paused?'<span class="ico" aria-hidden="true">\u25B6</span>Resume clocks':'<span class="ico" aria-hidden="true">\u275A\u275A</span>Pause clocks';}
+    label();
+    btn.addEventListener('click',function(){paused=!paused; label(); if(paused) clearTimeout(timer); else schedule();});
+    if(list) list.parentNode.insertBefore(btn,list);
+    schedule();})();
+  /* Layout helpers for accessibility:
+     - publish the sticky header / sticky policy-controls heights so scroll-padding keeps focus visible (WCAG 2.4.11)
+     - make horizontally scrolling table/chart wrappers keyboard-reachable named regions only while they overflow (WCAG 2.1.1) */
+  (function(){var root=document.documentElement, hdr=document.querySelector('header.nav'), pbc=document.querySelector('.pb-controls');
+    var wraps=document.querySelectorAll('.tablewrap');
+    function sticky(e){return e && getComputedStyle(e).position==='sticky';}
+    function update(){
+      root.style.setProperty('--hdr',(sticky(hdr)?hdr.offsetHeight:0)+'px');
+      root.style.setProperty('--pbc',(sticky(pbc)?pbc.offsetHeight:0)+'px');
+      Array.prototype.forEach.call(wraps,function(w){var over=w.scrollWidth>w.clientWidth+1;
+        if(over){w.setAttribute('tabindex','0');w.setAttribute('role','region');w.setAttribute('aria-labelledby',w.getAttribute('data-region-label'));}
+        else{w.removeAttribute('tabindex');w.removeAttribute('role');w.removeAttribute('aria-labelledby');}});}
+    update();
+    if(window.ResizeObserver){var ro=new ResizeObserver(update); ro.observe(hdr); if(pbc) ro.observe(pbc); Array.prototype.forEach.call(wraps,function(w){ro.observe(w);});}
+    window.addEventListener('resize',update);
+  })();
 </script>
 </body>
 </html>

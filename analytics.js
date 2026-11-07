@@ -45,11 +45,16 @@
     send('ui_click', params);
   }, true);
 
-  // Opening a proposal (details element).
+  // Opening a proposal, or any other expandable (e.g. a Semmelspan "Read more").
   document.addEventListener('toggle', function (e) {
     var d = e.target;
-    if (d.tagName === 'DETAILS' && d.open) {
+    if (d.tagName !== 'DETAILS' || !d.open) return;
+    if (d.classList.contains('pol')) {
       send('proposal_open', { proposal_id: (d.id || '').toUpperCase(), section: sectionOf(d) });
+    } else {
+      var item = d.closest('li, .tool, .plan') || d;
+      var h = item.querySelector('h3');
+      send('details_open', { label: label(h || d.querySelector('summary') || d), section: sectionOf(d) });
     }
   }, true);
 

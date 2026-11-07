@@ -148,7 +148,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
       <div class="slider">
         <div class="top"><label for="s-A">Assaults per year (A)</label><output for="s-A" id="o-A"></output></div>
         <input type="range" id="s-A" min="100000" max="1000000" step="10000" aria-describedby="h-A">
-        <p class="hint" id="h-A">U.S. sexual assaults per year. Default is a placeholder to verify against the latest BJS NCVS report.</p>
+        <p class="hint" id="h-A">U.S. rape and sexual assault victimizations per year. Default: 804,180, the Bureau of Justice Statistics' preliminary estimate for 2025.</p>
       </div>
       <div class="slider">
         <div class="top"><label for="s-b">Bedroom-reachable share (b)</label><output for="s-b" id="o-b"></output></div>
@@ -220,7 +220,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <li>Not every assault is reachable by a bedroom system. Assaults in cars, outdoors, at work or online fall outside it.</li>
     <li>Survey estimates of sexual assault vary widely by method, wording and population, so the annual figure A is uncertain.</li>
     <li>The model assumes a constant annual rate and a simple linear adoption ramp; real adoption and prevention would be uneven.</li>
-    <li>The averted-cost figure multiplies the estimate by a per-victim lifetime cost for rape, in 2014 dollars, and is not adjusted for inflation or for differences between types of assault.</li>
+    <li>The averted-cost figure multiplies the estimate by a per-victim lifetime cost for rape, in 2014 dollars, and is not adjusted for inflation or for differences between types of assault. Because the survey counts victimizations rather than victims, and includes threatened and attempted assaults, it may overstate the cost.</li>
   </ul>
 </div></section>
 </main>
@@ -246,8 +246,8 @@ $('src-pub').textContent = longDate(CONFIG.PUBLICATION_DATE) + (CONFIG.PUBLICATI
 if (CONFIG.A_SOURCE_URL) {
   $('src-A').innerHTML = '';
   const a = document.createElement('a');
-  a.href = CONFIG.A_SOURCE_URL; a.textContent = 'Bureau of Justice Statistics, National Crime Victimization Survey';
-  $('src-A').append(fmt.format(CONFIG.A) + ' per year. ', a, '.');
+  a.href = CONFIG.A_SOURCE_URL; a.textContent = CONFIG.A_SOURCE_NAME || 'Bureau of Justice Statistics, National Crime Victimization Survey';
+  $('src-A').append(fmt.format(CONFIG.A) + ' ' + CONFIG.A_LABEL + '. ', a, '. The redesigned survey is not comparable to estimates from before 2024. Survey estimates count victimizations, not victims, and include people age 12 to 17.');
 } else {
   $('src-A').textContent = fmt.format(CONFIG.A) + ' per year. ' + CONFIG.A_LABEL + '.';
 }
@@ -331,7 +331,7 @@ function currentN(now) {
 
 function renderTable() {
   const rows = [
-    ['Assaults per year (A)', fmt.format(params.A), CONFIG.A_SOURCE_URL ? 'BJS NCVS' : 'Placeholder, to verify against the latest BJS NCVS report'],
+    ['Assaults per year (A)', fmt.format(params.A), CONFIG.A_SOURCE_URL ? (params.A === CONFIG.A ? 'BJS NCVS, 2025 preliminary estimate' : 'Custom value') : 'Placeholder, to verify against the latest BJS NCVS report'],
     ['Bedroom-reachable share (b)', pct(params.b), 'Assumption'],
     ['Peak adoption (u max)', pct(params.uMax), 'Assumption'],
     ['Adoption ramp', longDate(params.start) + ' to ' + longDate(params.rampEnd), 'Assumption'],

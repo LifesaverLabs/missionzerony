@@ -8,11 +8,15 @@
 
 // ---- Assumptions: edit these ----------------------------------------------
 export const CONFIG = {
-  // U.S. sexual assaults per year. PLACEHOLDER: verify against the latest
-  // BJS National Crime Victimization Survey report and fill in the source URL.
-  A: 400000,
-  A_LABEL: 'Placeholder: verify against the latest BJS NCVS report',
-  A_SOURCE_URL: '', // e.g. the BJS "Criminal Victimization" report URL
+  // U.S. rape/sexual assault victimizations per year, persons age 12 or older,
+  // including threatened, attempted and completed. BJS, Preliminary
+  // Victimization Estimates from the NCVS, 2025 (NCJ 312234, October 2026),
+  // table 1: 804,180 in 2025 (preliminary; standard error 75,380).
+  // The final 2024 figure from the redesigned survey is 910,530.
+  A: 804180,
+  A_LABEL: 'rape or sexual assault victimizations of persons age 12 or older in 2025 (preliminary estimate; the final 2024 figure was 910,530)',
+  A_SOURCE_NAME: 'Bureau of Justice Statistics, Preliminary Victimization Estimates from the NCVS, 2025 (NCJ 312234, October 2026), table 1',
+  A_SOURCE_URL: 'https://bjs.ojp.gov/document/pvencvs25.pdf',
 
   // Original provisional application, U.S. 62/099,456, filed January 3, 2015.
   PROVISIONAL_APP: 'U.S. Provisional Application No. 62/099,456',

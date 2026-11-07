@@ -183,7 +183,9 @@ details.pol[open]{border-color:var(--ink)}
 .sc-body{display:grid;gap:10px;padding-top:6px}
 .cf-callout{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--glow);border-radius:14px;padding:clamp(18px,3vw,28px);display:grid;gap:10px;justify-items:start;max-width:72ch}
 .cf-q{font:700 clamp(1.2rem,2.4vw,1.5rem)/1.25 var(--f-display);text-wrap:balance}
-.sc-pause{justify-self:start;padding:8px 14px;font-size:.85rem}
+.sc-pause{justify-self:start;display:inline-flex;align-items:center;gap:6px;min-height:28px;padding:2px 0;border:0;background:none;color:var(--muted);font:500 .82rem/1 var(--f-display);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sc-pause:hover{color:var(--ink)}
+.sc-pause .ico{font-size:.7rem;text-decoration:none;display:inline-block}
 .pledge{background:var(--night);color:var(--night-ink);border-radius:18px;padding:clamp(22px,4vw,44px)}
 .pledge h2{color:var(--night-ink)}
 .pledge .eyebrow{color:var(--glow)}
@@ -201,7 +203,9 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   .pb-controls{position:static}
 }
 /* On narrow or short viewports (phones, 200-400% zoom) the wrapped nav would cover much of the screen; let it scroll away (WCAG 1.4.10, 2.4.11) */
-@media (max-width:640px),(max-height:560px){header.nav{position:static}.pb-controls{position:static}}
+/* Phones: keep the header pinned but compact, with one swipeable row of links. Very short screens (heavy zoom, landscape) unpin it. */
+@media (max-width:640px){header.nav .wrap{gap:6px;padding-block:8px}nav.links{flex-wrap:nowrap;overflow-x:auto;width:100%;white-space:nowrap;gap:16px;padding-bottom:4px;scrollbar-width:none;-webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}nav.links::-webkit-scrollbar{display:none}nav.links a{flex:0 0 auto}.pb-controls{position:static}}
+@media (max-height:560px){header.nav{position:static}.pb-controls{position:static}}
 </style>
 </head>
 <body>
@@ -639,9 +643,11 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
       timer=setTimeout(schedule,wait+20);}
     if(mq.addEventListener) mq.addEventListener('change',schedule); else if(mq.addListener) mq.addListener(schedule);
     var list=document.querySelector('.sc-list'), btn=document.createElement('button');
-    btn.type='button'; btn.className='btn sc-pause'; btn.textContent='Pause clocks';
-    btn.addEventListener('click',function(){paused=!paused; btn.textContent=paused?'Resume clocks':'Pause clocks'; if(paused) clearTimeout(timer); else schedule();});
-    if(list) list.parentNode.insertBefore(btn,list.nextSibling);
+    btn.type='button'; btn.className='sc-pause';
+    function label(){btn.innerHTML=paused?'<span class="ico" aria-hidden="true">\u25B6</span>Resume clocks':'<span class="ico" aria-hidden="true">\u275A\u275A</span>Pause clocks';}
+    label();
+    btn.addEventListener('click',function(){paused=!paused; label(); if(paused) clearTimeout(timer); else schedule();});
+    if(list) list.parentNode.insertBefore(btn,list);
     schedule();})();
   /* Layout helpers for accessibility:
      - publish the sticky header / sticky policy-controls heights so scroll-padding keeps focus visible (WCAG 2.4.11)

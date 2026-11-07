@@ -117,7 +117,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 <section id="estimate"><div class="wrap stack">
   <p class="eyebrow">Counterfactual model</p>
   <h1>What the wait may have cost</h1>
-  <p class="lede">An estimate, not a count of real events. If bedroom consent-and-safety technology had been built and adopted after the 2016 patent publication, how many sexual assaults could it have prevented? The answer depends entirely on the assumptions below, so every one of them is shown and adjustable.</p>
+  <p class="lede">An estimate, not a count of real events. If bedroom consent-and-safety technology had been built and adopted after the original provisional patent application was filed on January 3, 2015, how many sexual assaults could it have prevented? The answer depends entirely on the assumptions below, so every one of them is shown and adjustable.</p>
 
   <div class="night" role="group" aria-labelledby="count-label">
     <p class="eyebrow">Running estimate</p>
@@ -208,7 +208,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <ul class="plain col">
     <li><b>Assaults per year (A):</b> <span id="src-A"></span></li>
     <li><b>Lifetime cost per victim:</b> $122,461 in 2014 dollars. Peterson C, DeGue S, Florence C, Lokey CN. Lifetime Economic Burden of Rape Among U.S. Adults. <i>American Journal of Preventive Medicine</i>. 2017;52(6):691–701 (CDC).</li>
-    <li><b>Start of the counterfactual:</b> U.S. Pub. No. 2016/0196735 A1, published <span id="src-pub"></span>. The estimate counts from <span id="src-start"></span>.</li>
+    <li><b>Start of the counterfactual:</b> the estimate counts from <span id="src-start"></span>, when <span id="src-prov"></span> was filed. The application was later published as U.S. Pub. No. 2016/0196735 A1 on <span id="src-pub"></span>.</li>
     <li><b>Scenario values (b, u<sub>max</sub>, e):</b> modeling assumptions, not measured values.</li>
   </ul>
 </div></section>
@@ -241,6 +241,7 @@ const longDate = (d) => new Date(toMs(d)).toLocaleDateString('en-US', { timeZone
 
 $('start-year').textContent = startYear;
 $('src-start').textContent = longDate(CONFIG.START);
+$('src-prov').textContent = CONFIG.PROVISIONAL_APP;
 $('src-pub').textContent = longDate(CONFIG.PUBLICATION_DATE) + (CONFIG.PUBLICATION_DATE_CONFIRMED ? '' : ' (date to be confirmed)');
 if (CONFIG.A_SOURCE_URL) {
   $('src-A').innerHTML = '';

@@ -91,9 +91,16 @@ test('ramp end at or before START means full adoption from START', () => {
   close(prevented(t, params), CONFIG.A * 0.7 * 0.5 * 0.5 * ((t - toMs(CONFIG.START)) / YEAR_MS));
 });
 
-test('sanity: Middle total in late 2026 is in the hundreds of thousands', () => {
+test('sanity: Middle total in late 2026 matches a hand calculation', () => {
+  // Ramp Jan 3, 2015 to Jan 1, 2026 (~11 years), then ~0.85 years flat:
+  // 400,000 × 0.7 × 0.5 × 0.5 × (11/2 + 0.85) ≈ 444,000.
   const n = prevented('2026-11-07', middle);
-  assert.ok(n > 300000 && n < 450000, String(n));
+  assert.ok(n > 420000 && n < 470000, String(n));
+});
+
+test('counting starts at the provisional filing date', () => {
+  assert.equal(CONFIG.START, CONFIG.PROVISIONAL_FILED);
+  assert.equal(CONFIG.START, '2015-01-03');
 });
 
 test('averted cost uses the per-victim figure', () => {

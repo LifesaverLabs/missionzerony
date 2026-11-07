@@ -14,12 +14,16 @@ export const CONFIG = {
   A_LABEL: 'Placeholder: verify against the latest BJS NCVS report',
   A_SOURCE_URL: '', // e.g. the BJS "Criminal Victimization" report URL
 
-  // Publication of U.S. Pub. No. 2016/0196735 A1. PLACEHOLDER: confirm.
+  // Original provisional application, U.S. 62/099,456, filed January 3, 2015.
+  PROVISIONAL_APP: 'U.S. Provisional Application No. 62/099,456',
+  PROVISIONAL_FILED: '2015-01-03',
+
+  // Later publication of U.S. Pub. No. 2016/0196735 A1. PLACEHOLDER: confirm.
   PUBLICATION_DATE: '2016-07-07',
   PUBLICATION_DATE_CONFIRMED: false,
 
-  // When the counterfactual starts counting.
-  START: '2017-01-01',
+  // When the counterfactual starts counting: the provisional filing date.
+  START: '2015-01-03',
 
   // Lifetime cost per rape victim, 2014 dollars (CDC: Peterson et al. 2017,
   // Am J Prev Med 52(6):691–701).

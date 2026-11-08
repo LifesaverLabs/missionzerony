@@ -18,7 +18,7 @@ const mainLinks = navLinks(read('./index.html')).map(({ href, text }) => ({
   text,
 }));
 
-const SUBPAGES = ['./counterfactual/index.html'];
+const SUBPAGES = ['./counterfactual/index.html', './built-instead/index.html'];
 
 for (const page of SUBPAGES) {
   test(`${page} nav matches the main page nav`, () => {

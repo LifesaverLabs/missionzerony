@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Counterfactual · Mission Zero NY</title>
-<meta name="description" content="A counterfactual model, under stated assumptions, of sexual assaults that bedroom consent-and-safety technology could have prevented if it had been built and adopted after 2016.">
+<meta name="description" content="A counterfactual model, under stated assumptions, of date rapes and dating sexual assaults that bedroom consent-and-safety technology could have prevented if it had been built and adopted after 2016.">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4MWNJZX79X"></script>
 <script src="/analytics.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,11 +117,11 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 <section id="estimate"><div class="wrap stack">
   <p class="eyebrow">Counterfactual model</p>
   <h1>What the wait may have cost</h1>
-  <p class="lede">An estimate, not a count of real events. If bedroom consent-and-safety technology had been built and adopted after the original provisional patent application was filed on January 3, 2015, how many sexual assaults could it have prevented? The answer depends entirely on the assumptions below, so every one of them is shown and adjustable.</p>
+  <p class="lede">An estimate, not a count of real events. If bedroom consent-and-safety technology had been built and adopted after the original provisional patent application was filed on January 3, 2015, how many date rapes and dating sexual assaults could it have prevented? The model counts only those, not every sexual assault: some kinds, like assault on someone who is asleep, a bedroom system couldn’t easily stop. The answer depends entirely on the assumptions below, so every one of them is shown and adjustable.</p>
 
   <div class="night" role="group" aria-labelledby="count-label">
     <p class="eyebrow">Running estimate</p>
-    <p class="count-label" id="count-label">Estimated sexual assaults that could have been prevented since <span id="start-year">2017</span>, under the selected assumptions</p>
+    <p class="count-label" id="count-label">Estimated date rapes and dating sexual assaults that could have been prevented since <span id="start-year">2017</span>, under the selected assumptions</p>
     <p class="count" id="count">0</p>
     <p class="sub" id="rate"></p>
     <p class="sub" id="cost"></p>
@@ -151,9 +151,14 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
         <p class="hint" id="h-A">U.S. rape and sexual assault victimizations per year. Default: 804,180, the Bureau of Justice Statistics' preliminary estimate for 2025.</p>
       </div>
       <div class="slider">
+        <div class="top"><label for="s-d">Date rape and dating assault share (d)</label><output for="s-d" id="o-d"></output></div>
+        <input type="range" id="s-d" min="0" max="100" step="5" aria-describedby="h-d">
+        <p class="hint" id="h-d">Share of all assaults by a partner, date, hookup or acquaintance while the person is awake and able to signal. Leaves out strangers, family members, and assaults that begin while the person is asleep or unconscious. At most about 72%.</p>
+      </div>
+      <div class="slider">
         <div class="top"><label for="s-b">Bedroom-reachable share (b)</label><output for="s-b" id="o-b"></output></div>
         <input type="range" id="s-b" min="0" max="100" step="5" aria-describedby="h-b">
-        <p class="hint" id="h-b">Share of assaults in settings a bedroom system could reach: dorms, bedrooms, apartments.</p>
+        <p class="hint" id="h-b">Share of those date and dating assaults in settings a bedroom system could reach: dorms, bedrooms, apartments.</p>
       </div>
       <div class="slider">
         <div class="top"><label for="s-u">Peak adoption (u<sub>max</sub>)</label><output for="s-u" id="o-u"></output></div>
@@ -185,13 +190,13 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 
 <section aria-labelledby="math-h"><div class="wrap stack">
   <h2 id="math-h">How it's calculated</h2>
-  <div class="formula" role="math" aria-label="N of t equals the integral from START to t of A times b times u of tau times e, d tau">N(t) = ∫<sub>START</sub><sup>t</sup> A × b × u(τ) × e dτ</div>
+  <div class="formula" role="math" aria-label="N of t equals the integral from START to t of A times d times b times u of tau times e, d tau">N(t) = ∫<sub>START</sub><sup>t</sup> A × d × b × u(τ) × e dτ</div>
   <div class="col stack">
     <p>Adoption u(τ) rises in a straight line from 0 at the start date to u<sub>max</sub> at the year adoption peaks, then stays flat. The integral is computed in closed form, so the estimate rises smoothly in real time. With D the length of the ramp in years and x the years since the start:</p>
     <ul class="plain">
-      <li>During the ramp: N = A × b × e × u<sub>max</sub> × x² ÷ (2D)</li>
-      <li>After the ramp: N = A × b × e × u<sub>max</sub> × (D ÷ 2 + years since the peak)</li>
-      <li>After the peak, the rate is A × b × u<sub>max</sub> × e per year.</li>
+      <li>During the ramp: N = A × d × b × e × u<sub>max</sub> × x² ÷ (2D)</li>
+      <li>After the ramp: N = A × d × b × e × u<sub>max</sub> × (D ÷ 2 + years since the peak)</li>
+      <li>After the peak, the rate is A × d × b × u<sub>max</sub> × e per year.</li>
     </ul>
   </div>
   <div class="tablewrap" role="region" aria-labelledby="tbl-cap" tabindex="0">
@@ -207,9 +212,10 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <h2 id="src-h">Sources</h2>
   <ul class="plain col">
     <li><b>Assaults per year (A):</b> <span id="src-A"></span></li>
+    <li><b>Date rape and dating assault share (d):</b> in the <a href="https://bjs.ojp.gov/content/pub/pdf/fvsv9410.pdf">Bureau of Justice Statistics’ <i>Female Victims of Sexual Violence, 1994–2010</i></a> (table 2), 34% of rapes and sexual assaults from 2005 to 2010 were by a current or former intimate partner and 38% by a friend or acquaintance, 72% together. Not all of those happened in a dating or sexual setting, and some began while the person was asleep or unconscious, so the scenarios assume 40% to 60%. Those figures are for female victims.</li>
     <li><b>Lifetime cost per victim:</b> $122,461 in 2014 dollars. Peterson C, DeGue S, Florence C, Lokey CN. Lifetime Economic Burden of Rape Among U.S. Adults. <i>American Journal of Preventive Medicine</i>. 2017;52(6):691–701 (CDC).</li>
     <li><b>Start of the counterfactual:</b> the estimate counts from <span id="src-start"></span>, when <span id="src-prov"></span> was filed. The application was later published as U.S. Pub. No. 2016/0196735 A1 on <span id="src-pub"></span>.</li>
-    <li><b>Scenario values (b, u<sub>max</sub>, e):</b> modeling assumptions, not measured values.</li>
+    <li><b>Scenario values (d, b, u<sub>max</sub>, e):</b> modeling assumptions, not measured values.</li>
   </ul>
 </div></section>
 
@@ -217,7 +223,8 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <h2 id="lim-h">Limitations</h2>
   <ul class="plain col">
     <li>Adoption and efficacy are hypothetical. No bedroom consent-and-safety system has been deployed at scale or tested in a randomized trial; Mission Zero's proposed pilot is meant to measure this.</li>
-    <li>Not every assault is reachable by a bedroom system. Assaults in cars, outdoors, at work or online fall outside it.</li>
+    <li>The model counts only date rapes and dating sexual assaults. It leaves out assaults by strangers and family members, and assaults that begin while the person is asleep or already unconscious, which a system that depends on a word, a button or a renewed yes couldn’t easily interrupt. Other proposals on this site address some of them.</li>
+    <li>Not every date or dating assault is reachable by a bedroom system. Assaults in cars, outdoors, at work or online fall outside it.</li>
     <li>Survey estimates of sexual assault vary widely by method, wording and population, so the annual figure A is uncertain.</li>
     <li>The model assumes a constant annual rate and a simple linear adoption ramp; real adoption and prevention would be uneven.</li>
     <li>The averted-cost figure multiplies the estimate by a per-victim lifetime cost for rape, in 2014 dollars, and is not adjusted for inflation or for differences between types of assault. Because the survey counts victimizations rather than victims, and includes threatened and attempted assaults, it may overstate the cost.</li>
@@ -255,6 +262,7 @@ if (CONFIG.A_SOURCE_URL) {
 
 const sliders = {
   A: { el: $('s-A'), out: $('o-A'), get: (v) => +v, set: (p) => p.A, show: (v) => fmt.format(v) },
+  d: { el: $('s-d'), out: $('o-d'), get: (v) => v / 100, set: (p) => Math.round(p.d * 100), show: (v) => v + '%' },
   b: { el: $('s-b'), out: $('o-b'), get: (v) => v / 100, set: (p) => Math.round(p.b * 100), show: (v) => v + '%' },
   uMax: { el: $('s-u'), out: $('o-u'), get: (v) => v / 100, set: (p) => Math.round(p.uMax * 100), show: (v) => v + '%' },
   rampEnd: { el: $('s-r'), out: $('o-r'), get: (v) => v + '-01-01', set: (p) => yearOf(p.rampEnd), show: (v) => String(v) },
@@ -333,6 +341,7 @@ function currentN(now) {
 function renderTable() {
   const rows = [
     ['Assaults per year (A)', fmt.format(params.A), CONFIG.A_SOURCE_URL ? (params.A === CONFIG.A ? 'BJS NCVS, 2025 preliminary estimate' : 'Custom value') : 'Placeholder, to verify against the latest BJS NCVS report'],
+    ['Date rape and dating assault share (d)', pct(params.d), 'Assumption, capped by BJS NCVS 2005–2010 (72% partner or acquaintance)'],
     ['Bedroom-reachable share (b)', pct(params.b), 'Assumption'],
     ['Peak adoption (u max)', pct(params.uMax), 'Assumption'],
     ['Adoption ramp', longDate(params.start) + ' to ' + longDate(params.rampEnd), 'Assumption'],
@@ -376,7 +385,7 @@ function announce() {
   clearTimeout(announceTimer);
   announceTimer = setTimeout(() => {
     const now = Date.now(), n = currentN(now), name = preset === 'custom' ? 'custom' : CONFIG.PRESETS[preset].label.toLowerCase();
-    let msg = 'Under the ' + name + ' assumptions, an estimated ' + fmt.format(Math.floor(n)) + ' sexual assaults could have been prevented since ' + startYear + ', about ' + fmt.format(Math.round(ratePerYear(now, params))) + ' a year now.';
+    let msg = 'Under the ' + name + ' assumptions, an estimated ' + fmt.format(Math.floor(n)) + ' date rapes and dating sexual assaults could have been prevented since ' + startYear + ', about ' + fmt.format(Math.round(ratePerYear(now, params))) + ' a year now.';
     const s = shareValue();
     if (s !== null) msg += " Inventor's share at " + Math.round(s * 100) + '%: ' + fmt.format(Math.floor(n * s)) + '.';
     $('announce').textContent = msg;

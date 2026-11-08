@@ -53,24 +53,24 @@ test('continuous in value and slope at RAMP_END', () => {
 test('preset values', () => {
   assert.deepEqual(
     { ...presetParams('conservative') },
-    { A: CONFIG.A, b: 0.5, uMax: 0.25, e: 0.3, start: CONFIG.START, rampEnd: '2026-01-01' },
+    { A: CONFIG.A, d: 0.4, b: 0.5, uMax: 0.25, e: 0.3, start: CONFIG.START, rampEnd: '2026-01-01' },
   );
   assert.deepEqual(
     { ...presetParams('middle') },
-    { A: CONFIG.A, b: 0.7, uMax: 0.5, e: 0.5, start: CONFIG.START, rampEnd: '2026-01-01' },
+    { A: CONFIG.A, d: 0.5, b: 0.7, uMax: 0.5, e: 0.5, start: CONFIG.START, rampEnd: '2026-01-01' },
   );
   assert.deepEqual(
     { ...presetParams('optimistic') },
-    { A: CONFIG.A, b: 0.8, uMax: 1.0, e: 0.5, start: CONFIG.START, rampEnd: '2019-01-01' },
+    { A: CONFIG.A, d: 0.6, b: 0.8, uMax: 1.0, e: 0.5, start: CONFIG.START, rampEnd: '2019-01-01' },
   );
   assert.equal(CONFIG.DEFAULT_PRESET, 'middle');
   assert.throws(() => presetParams('nope'));
 });
 
-test('post-ramp rate is A × b × uMax × e per year', () => {
+test('post-ramp rate is A × d × b × uMax × e per year', () => {
   const t = toMs('2027-06-01');
-  close(ratePerYear(t, middle), CONFIG.A * 0.7 * 0.5 * 0.5);
-  close(ratePerSecond(t, middle) * (YEAR_MS / 1000), CONFIG.A * 0.7 * 0.5 * 0.5);
+  close(ratePerYear(t, middle), CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5);
+  close(ratePerSecond(t, middle) * (YEAR_MS / 1000), CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5);
 });
 
 test('monotonic, non-decreasing over time', () => {
@@ -88,20 +88,26 @@ test('monotonic, non-decreasing over time', () => {
 test('ramp end at or before START means full adoption from START', () => {
   const params = { ...middle, rampEnd: CONFIG.START };
   const t = toMs('2018-01-01');
-  close(prevented(t, params), CONFIG.A * 0.7 * 0.5 * 0.5 * ((t - toMs(CONFIG.START)) / YEAR_MS));
+  close(prevented(t, params), CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * ((t - toMs(CONFIG.START)) / YEAR_MS));
 });
 
 test('sanity: Middle total in late 2026 matches a hand calculation', () => {
   // Ramp Jan 3, 2015 to Jan 1, 2026 (~11 years), then ~0.85 years flat:
-  // A × 0.7 × 0.5 × 0.5 × (11/2 + 0.85).
+  // A × 0.5 × 0.7 × 0.5 × 0.5 × (11/2 + 0.85).
   const n = prevented('2026-11-07', middle);
-  const expected = CONFIG.A * 0.7 * 0.5 * 0.5 * (11 / 2 + 0.85);
+  const expected = CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * (11 / 2 + 0.85);
   assert.ok(Math.abs(n - expected) / expected < 0.01, `${n} vs ${expected}`);
 });
 
 test('counting starts at the provisional filing date', () => {
   assert.equal(CONFIG.START, CONFIG.PROVISIONAL_FILED);
   assert.equal(CONFIG.START, '2015-01-03');
+});
+
+test('date share narrows the count', () => {
+  const t = toMs('2027-06-01');
+  close(prevented(t, middle), prevented(t, { ...middle, d: 1 }) * 0.5);
+  assert.ok(CONFIG.PRESETS.optimistic.d <= 0.72, 'd stays under the 72% known-offender ceiling');
 });
 
 test('averted cost uses the per-victim figure', () => {

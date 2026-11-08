@@ -1,9 +1,10 @@
-// Counterfactual model: sexual assaults that could have been prevented if
+// Counterfactual model: date rapes and dating sexual assaults that could have
+// been prevented if
 // bedroom consent-and-safety technology had been built and adopted after the
 // 2016 patent publication. Pure functions only, so this file can be imported
 // by the page and by Node's test runner.
 //
-// N(t) = ∫ from START to t of A × b × u(τ) × e dτ
+// N(t) = ∫ from START to t of A × d × b × u(τ) × e dτ
 // u(τ) ramps linearly from 0 at START to uMax at RAMP_END, then stays flat.
 
 // ---- Assumptions: edit these ----------------------------------------------
@@ -17,6 +18,16 @@ export const CONFIG = {
   A_LABEL: 'rape or sexual assault victimizations of persons age 12 or older in 2025 (preliminary estimate; the final 2024 figure was 910,530)',
   A_SOURCE_NAME: 'Bureau of Justice Statistics, Preliminary Victimization Estimates from the NCVS, 2025 (NCJ 312234, October 2026), table 1',
   A_SOURCE_URL: 'https://bjs.ojp.gov/document/pvencvs25.pdf',
+
+  // d: share of all rapes and sexual assaults that are date rapes and dating
+  // sexual assaults the system could interrupt: by a partner, date, hookup or
+  // acquaintance, while the person is awake and able to signal. Excludes
+  // strangers, family members, and assaults that begin while the person is
+  // asleep or already unconscious. Ceiling: in BJS's 2005–2010 NCVS data on
+  // female victims, 34% were by an intimate partner and 38% by a friend or
+  // acquaintance (72% together). The presets assume 40%–60% of all assaults.
+  D_SOURCE_NAME: 'Bureau of Justice Statistics, Female Victims of Sexual Violence, 1994–2010 (NCJ 240655, 2013), table 2',
+  D_SOURCE_URL: 'https://bjs.ojp.gov/content/pub/pdf/fvsv9410.pdf',
 
   // Original provisional application, U.S. 62/099,456, filed January 3, 2015.
   PROVISIONAL_APP: 'U.S. Provisional Application No. 62/099,456',
@@ -35,9 +46,9 @@ export const CONFIG = {
 
   DEFAULT_PRESET: 'middle',
   PRESETS: {
-    conservative: { label: 'Conservative', b: 0.5, uMax: 0.25, rampEnd: '2026-01-01', e: 0.3 },
-    middle: { label: 'Middle', b: 0.7, uMax: 0.5, rampEnd: '2026-01-01', e: 0.5 },
-    optimistic: { label: 'Optimistic', b: 0.8, uMax: 1.0, rampEnd: '2019-01-01', e: 0.5 },
+    conservative: { label: 'Conservative', d: 0.4, b: 0.5, uMax: 0.25, rampEnd: '2026-01-01', e: 0.3 },
+    middle: { label: 'Middle', d: 0.5, b: 0.7, uMax: 0.5, rampEnd: '2026-01-01', e: 0.5 },
+    optimistic: { label: 'Optimistic', d: 0.6, b: 0.8, uMax: 1.0, rampEnd: '2019-01-01', e: 0.5 },
   },
 };
 // ---------------------------------------------------------------------------
@@ -57,7 +68,7 @@ export function toMs(date) {
 export function presetParams(name, config = CONFIG) {
   const p = config.PRESETS[name];
   if (!p) throw new Error(`Unknown preset: ${name}`);
-  return { A: config.A, b: p.b, uMax: p.uMax, e: p.e, start: config.START, rampEnd: p.rampEnd };
+  return { A: config.A, d: p.d, b: p.b, uMax: p.uMax, e: p.e, start: config.START, rampEnd: p.rampEnd };
 }
 
 /** Adoption fraction u(t). */
@@ -82,14 +93,19 @@ export function adoptionYears(t, params) {
   return params.uMax * (D / 2 + (T - R) / YEAR_MS);
 }
 
-/** N(t): estimated preventable assaults from START to t. Never negative. */
+/** Share of assaults the model covers: date rapes and dating sexual assaults. */
+function dateShare(params) {
+  return params.d ?? 1;
+}
+
+/** N(t): estimated preventable date rapes and dating sexual assaults from START to t. Never negative. */
 export function prevented(t, params) {
-  return Math.max(0, params.A * params.b * params.e * adoptionYears(t, params));
+  return Math.max(0, params.A * dateShare(params) * params.b * params.e * adoptionYears(t, params));
 }
 
 /** Instantaneous rate dN/dt, per year. */
 export function ratePerYear(t, params) {
-  return params.A * params.b * params.e * adoption(t, params);
+  return params.A * dateShare(params) * params.b * params.e * adoption(t, params);
 }
 
 /** Instantaneous rate dN/dt, per second. */

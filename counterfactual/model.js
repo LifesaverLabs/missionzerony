@@ -44,6 +44,15 @@ export const CONFIG = {
   // Am J Prev Med 52(6):691–701).
   COST_PER_VICTIM_2014_USD: 122461,
 
+  // People and groups contacted about Mission Zero. Each clock counts the
+  // preventable assaults since that first contact, at the model's current rate.
+  CONTACTS: [
+    { label: 'Cornell administration', since: '2026-11-08T22:17:43Z', how: 'email' },
+    { label: 'Cornell Student Assembly', since: '2026-11-08T22:17:43Z', how: 'email' },
+    { label: 'The Cornell Daily Sun', since: '2026-11-08T22:17:43Z', how: 'email' },
+    { label: 'Georgia Tech, since our first call with a sexual violence researcher, focused just on the mango button simplex', since: '2026-11-11T15:10:00Z', how: 'call' },
+  ],
+
   DEFAULT_PRESET: 'middle',
   PRESETS: {
     conservative: { label: 'Conservative', d: 0.4, b: 0.5, uMax: 0.25, rampEnd: '2026-01-01', e: 0.3 },
@@ -56,10 +65,11 @@ export const CONFIG = {
 export const YEAR_MS = 365.25 * 24 * 60 * 60 * 1000;
 export const YEAR_SECONDS = YEAR_MS / 1000;
 
-/** Parse 'YYYY-MM-DD' (or a number of ms) to UTC milliseconds. */
+/** Parse 'YYYY-MM-DD', a full ISO timestamp, or a number of ms to UTC milliseconds. */
 export function toMs(date) {
   if (typeof date === 'number') return date;
   if (date instanceof Date) return date.getTime();
+  if (String(date).includes('T')) return Date.parse(date);
   const [y, m, d] = String(date).split('-').map(Number);
   return Date.UTC(y, (m || 1) - 1, d || 1);
 }
@@ -111,6 +121,11 @@ export function ratePerYear(t, params) {
 /** Instantaneous rate dN/dt, per second. */
 export function ratePerSecond(t, params) {
   return ratePerYear(t, params) / YEAR_SECONDS;
+}
+
+/** Preventable assaults between a first contact and t: N(t) − N(since). Never negative. */
+export function sinceContact(since, t, params) {
+  return Math.max(0, prevented(t, params) - prevented(since, params));
 }
 
 /** Estimated averted lifetime cost, 2014 dollars. */

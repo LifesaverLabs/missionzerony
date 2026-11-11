@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   CONFIG, YEAR_MS, toMs, presetParams, adoption, adoptionYears,
-  prevented, ratePerYear, ratePerSecond, avertedCost,
+  prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact,
 } from './model.js';
 
 const close = (a, b, rel = 1e-9) =>
@@ -112,4 +112,19 @@ test('date share narrows the count', () => {
 
 test('averted cost uses the per-victim figure', () => {
   assert.equal(avertedCost(10), 10 * 122461);
+});
+
+test('contact clocks start at zero and run at the current rate', () => {
+  const since = '2026-11-11T15:10:00Z';
+  assert.equal(sinceContact(since, since, middle), 0);
+  assert.equal(sinceContact(since, toMs(since) - 1000, middle), 0, 'never negative before contact');
+  const day = toMs(since) + YEAR_MS / 365.25;
+  close(sinceContact(since, day, middle), ratePerYear(day, middle) / 365.25);
+});
+
+test('contacts parse to real times', () => {
+  for (const c of CONFIG.CONTACTS) {
+    assert.ok(Number.isFinite(toMs(c.since)), c.label);
+    assert.ok(toMs(c.since) > toMs(CONFIG.START), c.label);
+  }
 });

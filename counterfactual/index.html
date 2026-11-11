@@ -145,6 +145,19 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <p class="help">If you or someone you know has been affected by sexual violence, you can reach the National Sexual Assault Hotline, run by RAINN, any time at <a href="tel:+18006564673">800-656-4673</a>. It's free and confidential.</p>
 </div></section>
 
+<section id="since-contact" aria-labelledby="contact-h"><div class="wrap stack">
+  <p class="eyebrow">Since we talked</p>
+  <h2 id="contact-h">The clock since each conversation</h2>
+  <p class="col">Each clock starts when I first reached someone about Mission Zero, and counts the date rapes and dating sexual assaults nationwide that the technology could have prevented since then, at the rate under the assumptions below. These clocks aren't a measure of blame. They show the pace: how much harm accrues while a fix waits, even over a few days, and why this needs warp-speed priority rather than the usual pace of institutions.</p>
+  <div class="tablewrap" role="region" aria-labelledby="contact-cap" tabindex="0">
+    <table>
+      <caption id="contact-cap">Preventable assaults since first contact, under the selected assumptions</caption>
+      <thead><tr><th scope="col">Contact</th><th scope="col">Since</th><th scope="col">Preventable since then</th></tr></thead>
+      <tbody id="contacts"></tbody>
+    </table>
+  </div>
+</div></section>
+
 <section aria-labelledby="assumptions-h"><div class="wrap stack">
   <h2 id="assumptions-h">Assumptions</h2>
   <div class="panel">
@@ -252,7 +265,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 </div></footer>
 
 <script type="module">
-import { CONFIG, presetParams, prevented, ratePerYear, ratePerSecond, avertedCost, toMs } from './model.js';
+import { CONFIG, presetParams, prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, toMs } from './model.js';
 
 const $ = (id) => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-US');
@@ -372,8 +385,25 @@ function renderTable() {
   }
 }
 
+const contactTime = (d) => new Date(toMs(d)).toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
+const contactCells = CONFIG.CONTACTS.map((c) => {
+  const tr = document.createElement('tr');
+  const th = document.createElement('th'); th.scope = 'row'; th.textContent = c.label;
+  const when = document.createElement('td'); when.textContent = contactTime(c.since) + (c.how ? ' (' + c.how + ')' : '');
+  const n = document.createElement('td');
+  tr.append(th, when, n); $('contacts').append(tr);
+  return { c, n };
+});
+function renderContacts(now) {
+  for (const { c, n } of contactCells) {
+    const v = sinceContact(c.since, now, params);
+    n.textContent = v < 10 ? v.toFixed(2) : fmt.format(Math.floor(v));
+  }
+}
+
 function render() {
   const now = Date.now();
+  renderContacts(now);
   const n = currentN(now);
   const whole = Math.floor(n), frac = (n - whole).toFixed(2).slice(1);
   const c = $('count');

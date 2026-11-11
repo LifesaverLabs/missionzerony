@@ -50,7 +50,7 @@ export const CONFIG = {
     { label: 'Cornell administration', since: '2026-11-08T22:17:43Z', how: 'email' },
     { label: 'Cornell Student Assembly', since: '2026-11-08T22:17:43Z', how: 'email' },
     { label: 'The Cornell Daily Sun', since: '2026-11-08T22:17:43Z', how: 'email' },
-    { label: 'Georgia Tech, since our first call with a sexual violence researcher, focused just on the mango button simplex', since: '2026-11-11T15:10:00Z', how: 'call' },
+    { label: 'Georgia Tech, since our first call with a high-ranking sexual violence researcher, focused just on the mango button simplex', since: '2026-11-11T15:10:00Z', how: 'call' },
   ],
 
   DEFAULT_PRESET: 'middle',

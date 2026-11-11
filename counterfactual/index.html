@@ -265,7 +265,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 </div></footer>
 
 <script type="module">
-import { CONFIG, presetParams, prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, toMs } from './model.js';
+import { CONFIG, presetParams, prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, toMs } from './model.js?v=4';
 
 const $ = (id) => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-US');
@@ -389,7 +389,8 @@ const contactTime = (d) => new Date(toMs(d)).toLocaleString('en-US', { timeZone:
 const contactCells = CONFIG.CONTACTS.map((c) => {
   const tr = document.createElement('tr');
   const th = document.createElement('th'); th.scope = 'row'; th.textContent = c.label;
-  const when = document.createElement('td'); when.textContent = contactTime(c.since) + (c.how ? ' (' + c.how + ')' : '');
+  const when = document.createElement('td');
+  when.textContent = (c.dateOnly ? longDate(c.since.slice(0, 10)) : contactTime(c.since)) + (c.how ? ' (' + c.how + ')' : '');
   const n = document.createElement('td');
   tr.append(th, when, n); $('contacts').append(tr);
   return { c, n };

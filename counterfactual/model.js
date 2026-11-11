@@ -46,7 +46,10 @@ export const CONFIG = {
 
   // People and groups contacted about Mission Zero. Each clock counts the
   // preventable assaults since that first contact, at the model's current rate.
+  // Calls start their clocks when the call ended. dateOnly hides the time
+  // when it isn't known.
   CONTACTS: [
+    { label: 'Georgia Tech, since first contact with a sexual assault prevention advocate', since: '2025-08-15T16:00:00Z', how: 'call' },
     { label: 'Cornell administration', since: '2026-11-08T22:17:43Z', how: 'email' },
     { label: 'Cornell Student Assembly', since: '2026-11-08T22:17:43Z', how: 'email' },
     { label: 'The Cornell Daily Sun', since: '2026-11-08T22:17:43Z', how: 'email' },

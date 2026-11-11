@@ -180,6 +180,11 @@ details.pol[open]{border-color:var(--ink)}
 .q-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;display:grid;gap:10px;align-content:start}
 @media (max-width:820px){.q-grid{grid-template-columns:minmax(0,1fr)}}
 .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.mangoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin:0}
+.mango{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:8px;align-content:start;margin:0}
+.mango img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:10px}
+.mango figcaption{display:grid;gap:4px;font:400 .95rem/1.5 var(--f-display)}
+.mango figcaption b{font-size:1.05rem}
 .plan{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--glow);border-radius:14px;padding:22px;display:grid;gap:10px;align-content:start}
 .plan-letter{font:800 2.4rem/1 var(--f-display);color:var(--accent)}
 .plan-meta{font:500 .85rem/1.5 var(--f-display);color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
@@ -254,6 +259,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
   <nav class="links" aria-label="Sections">
     <a href="#question">The question</a>
     <a href="#plans">Plans A·B·C</a>
+    <a href="#mango">Mango button</a>
     <a href="#problem">The problem</a>
     <a href="#design">The design gap</a>
     <a href="#research">The research</a>
@@ -366,6 +372,29 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <div class="plan"><p class="plan-letter" aria-hidden="true">C</p><h3><span class="sr-only-text">Plan C: </span>Gray-zone and red-zone prepanic buttons</h3><p>A button in the same spot at every headboard. One press for confusion or a gray-zone moment starts a quiet check-in; a red-zone press calls for help. No microphone, no camera, and pressing is always a choice. Call it a <i>prepanic</i> button or a <i>gray-zone</i> button: it's meant to be pressed before panic sets in, just as much as after.</p><p class="plan-meta">About $20 a button · <a href="#hero">Try the button</a> · <a href="#p-43" data-p="P-43">P-43</a>, <a href="#p-77" data-p="P-77">P-77</a></p></div>
   </div>
 </div></section>
+<section id="mango" aria-labelledby="mango-h"><div class="wrap stack">
+  <p class="eyebrow">The mango button</p>
+  <h2 id="mango-h">Why a mango</h2>
+  <p class="col">Plans B and C share one name: mango. The safeword is “mango mango,” and the button by the bed is the mango button. The word was chosen for two reasons.</p>
+  <p class="col"><b>It says what it means.</b> “Mango” breaks apart into “man, go.” Said twice, “mango mango” is also “man go, man go”: a stop signal with the instruction built in. It’s easy to remember under stress, easy to teach, and almost never said by accident in bed, so a device can act on it the moment it’s heard.</p>
+  <p class="col"><b>It ripens through every color the button needs.</b> A mango moves from unripe green through yellow to red. The mango button simplex uses that same range, from the unripe, precautionary greens of confusion to yellow-flag yellow to emergency red: one scale, so no one has to choose between a full alarm and saying nothing.</p>
+  <div class="mangoes">
+    <figure class="mango">
+      <img src="images/mango-green.webp" width="640" height="480" loading="lazy" decoding="async" alt="Unripe green mangoes on the tree, still hard and sour">
+      <figcaption><b>Unripe green: confusion, better coordinated</b><span>Something feels unclear or mistaken. An unripe green press is precautionary, not an accusation: it starts a quiet check-in so both people can pause and sort it out before anything goes wrong.</span></figcaption>
+    </figure>
+    <figure class="mango">
+      <img src="images/mango-yellow.webp" width="640" height="480" loading="lazy" decoding="async" alt="Ripe yellow Carabao mangoes on a plate, one cut open">
+      <figcaption><b>Yellow: a yellow flag</b><span>A boundary is being pushed. A yellow press says slow down and stop here, and brings in more support than a check-in, while there’s still time to turn things around.</span></figcaption>
+    </figure>
+    <figure class="mango">
+      <img src="images/mango-red.webp" width="640" height="480" loading="lazy" decoding="async" alt="A ripe mango with deep red, speckled skin">
+      <figcaption><b>Red: emergency</b><span>Stop now and get help. A red press is the red-zone alarm: it calls a trained responder or 911 to the room.</span></figcaption>
+    </figure>
+  </div>
+  <p class="caption col">Photos from Wikimedia Commons: green mangoes by <a href="https://commons.wikimedia.org/wiki/File:Unripe_green_mangoes_hang_from_branches_amidst_lush_leaves.jpg" target="_blank" rel="noopener">KaanaveniSaikiran<span class="sr-only"> (opens in new tab)</span></a> and yellow mangoes by <a href="https://commons.wikimedia.org/wiki/File:Carabao_mangoes_(Philippines).jpg" target="_blank" rel="noopener">Obsidian Soul<span class="sr-only"> (opens in new tab)</span></a>, both public domain (CC0); red mango by <a href="https://commons.wikimedia.org/wiki/File:A_mango_fruit_with_speckled_red_skin.png" target="_blank" rel="noopener">Leo219<span class="sr-only"> (opens in new tab)</span></a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0<span class="sr-only"> (opens in new tab)</span></a>, cropped and resized.</p>
+  <p class="col">Most hard moments in a bedroom start unripe and green, not red. A scale that makes the early, uncertain press easy and blameless is what lets help arrive before a moment ripens into an emergency.</p>
+</div></section>
 <section id="wrong-tree" aria-labelledby="wrong-tree-h"><div class="wrap stack">
   <p class="eyebrow">The wrong tree</p>
   <h2 id="wrong-tree-h">Barking up the wrong tree</h2>
@@ -416,6 +445,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <p><b>The cracks in Clery and VAWA.</b> The numbers colleges publish under the Clery Act and VAWA leave out much of what happens to their students. An assault in an off-campus apartment after a one-night stand usually falls outside Clery’s geography, so it isn’t counted. An assault disclosed only to a campus counselor isn’t counted either, because professional and pastoral counselors are exempt from reporting as campus security authorities. Their confidentiality matters, and nothing here asks them to name anyone. But the effect is a kind of catch and kill: the count is caught in counseling and never reaches the statistics, when an anonymized tally of how many survivors counselors are seeing would cost no one their privacy. Colleges have lived with these cracks for decades without asking Congress to close them. If they wanted to be honest, scientific surveyors of their own students, they would publish the full count anyway, Clery-required or not. The proposals for this are <a href="#p-50" data-p="P-50">P-50</a>, <a href="#p-54" data-p="P-54">P-54</a> and <a href="#p-73" data-p="P-73">P-73</a>.</p>
     <p><b>Cornell’s count came out before the uproar.</b> Cornell published its 2026 Annual Security Report on September 1, 2026 (<a href="https://www.cornellsun.com/article/2026/09/2026-annual-security-report-released-reported-on-campus-rape-dating-violence-decreases-while-stalking-increases" target="_blank" rel="noopener">Cornell Daily Sun<span class="sr-only"> (opens in new tab)</span></a>), a month ahead of the October 1 deadline the law sets. Jane Doe filed her lawsuit on September 16, and the I AM JANE DOE posts spread in the weeks after. The report’s figures for 2024, the year of the night in her suit, match last year’s report: 23 rapes and 21 fondlings on campus (<a href="https://publicsafety.cornell.edu/clery/wp-content/uploads/sites/5/2026-Campus_Watch_2026_FINAL-ua.pdf" target="_blank" rel="noopener">2026 report, PDF<span class="sr-only"> (opens in new tab)</span></a>). Clery counts a crime in the year it is reported, not the year it happened, so assaults first disclosed to campus security authorities this fall belong in the report due October 1, 2027. I fully expect, and would not be surprised, if that report never fully counts all the Jane Does on campus who came forward. University presidents oversee systems that are very tolerant of unreported sexual assault.</p>
     <p><b>New York already measures the gap.</b> New York is one of only a handful of states that require colleges to survey their own students about sexual assault, and it requires it at least every other year (<a href="https://www.nysenate.gov/legislation/laws/EDN/6445" target="_blank" rel="noopener">Education Law § 6445<span class="sr-only"> (opens in new tab)</span></a>, part of Article 129-B). These climate surveys come much closer to the true incidence than Clery and VAWA counts do. In Cornell’s 2025 survey, 35% of undergraduate women who answered said they had experienced nonconsensual sexual contact since entering Cornell, up from 23% in 2023 (<a href="https://statements.cornell.edu/2025/20251104-sarm-survey.cfm" target="_blank" rel="noopener">Cornell statement<span class="sr-only"> (opens in new tab)</span></a>). Only 926 of the 6,000 students invited answered, so that estimate is rough. But no plausible correction brings it anywhere near the 6 rapes and 7 fondlings the Annual Security Report counts on campus for 2025. The gap between the two counts remains huge and, to my knowledge, unreconciled and untreated.</p>
+    <p><b>The question no one asks.</b> In W. H. Auden’s 1939 poem <a href="https://en.wikipedia.org/wiki/The_Unknown_Citizen" target="_blank" rel="noopener"><i>The Unknown Citizen</i><span class="sr-only"> (opens in new tab)</span></a>, the state keeps a perfect record of one man’s life, then waves away the only question that matters: “Was he free? Was he happy? The question is absurd.” Nothing was wrong, it reasons, because nothing was reported. You can see that reasoning in decades of Clery and VAWA statistics. In my view, universities haven’t merely tolerated the gap between the assaults they count and the assaults their students experience; they have maintained and defended it. All along, they could have asked every student, every year, the question Auden’s state calls absurd, with the tools they already had at the time: email by the 1990s, online forms and student portals by the 2000s, phones in every pocket by the 2010s. Each could have put one quick safety-check question in front of every student, the Unknown Student, at a moment the school was already reaching them. Colleges and the state still reason the old way. A climate survey every other year, answered by about one student in six, is the closest they come to asking. They still don’t ask, not even when grades are released or when taxes are paid. Was she free? Was he happy? If anything had been wrong, they assume, they would certainly have heard.</p>
   </div>
 </div></section>
 <section id="design"><div class="wrap stack">

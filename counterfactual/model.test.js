@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   CONFIG, YEAR_MS, toMs, presetParams, adoption, adoptionYears,
-  prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact,
+  prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, earlierParams,
 } from './model.js';
 
 const close = (a, b, rel = 1e-9) =>
@@ -127,4 +127,31 @@ test('contacts parse to real times', () => {
     assert.ok(Number.isFinite(toMs(c.since)), c.label);
     assert.ok(toMs(c.since) > toMs(CONFIG.START), c.label);
   }
+});
+
+test('second count: same factors, earlier start', () => {
+  assert.equal(CONFIG.EARLIER_START, '2004-02-12');
+  assert.ok(toMs(CONFIG.EARLIER_START) < toMs(CONFIG.START));
+  for (const p of ['conservative', 'middle', 'optimistic']) {
+    const params = presetParams(p), early = earlierParams(params);
+    assert.deepEqual({ ...early, start: params.start }, { ...params }, 'only the start differs');
+    assert.equal(prevented(CONFIG.EARLIER_START, early), 0);
+    assert.equal(prevented(toMs(CONFIG.EARLIER_START) - 1, early), 0);
+    for (const t of ['2010-06-01', '2015-01-03', '2020-03-15', '2026-11-16', '2030-01-01']) {
+      assert.ok(prevented(t, early) >= prevented(t, params), `${p} at ${t}`);
+    }
+    // Once both ramps have peaked, the two counts rise at the same rate.
+    close(ratePerYear('2027-06-01', early), ratePerYear('2027-06-01', params));
+  }
+});
+
+test('second count: closed form and hand calculation', () => {
+  const early = earlierParams(middle);
+  // Ramp Feb 12, 2004 to Jan 1, 2026, then flat to Nov 16, 2026.
+  const D = (toMs(early.rampEnd) - toMs(early.start)) / YEAR_MS;
+  const flat = (toMs('2026-11-16') - toMs(early.rampEnd)) / YEAR_MS;
+  close(prevented('2026-11-16', early), CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * (D / 2 + flat));
+  // Mid-ramp: A × d × b × e × uMax × x² ÷ (2D).
+  const x = (toMs('2015-01-03') - toMs(early.start)) / YEAR_MS;
+  close(prevented('2015-01-03', early), CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * x * x / (2 * D));
 });

@@ -65,6 +65,8 @@ section:first-of-type{border-top:0}
 .night .sub{font:400 .95rem/1.5 var(--f-display);color:var(--night-muted)}
 .night .sub b{color:var(--night-ink);font-weight:600}
 .share{border-top:1px solid #2A3350;padding-top:12px}
+.second{border-top:1px solid #2A3350;padding-top:14px;display:grid;gap:10px}
+.count.small{font-size:clamp(1.9rem,8vw,3.4rem)}
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,28px);display:grid;gap:18px}
 fieldset{border:0;margin:0;padding:0;min-width:0}
 legend{font:700 1.1rem var(--f-display);padding:0;margin-bottom:10px}
@@ -140,6 +142,12 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <p class="count" id="count">0</p>
     <p class="sub" id="rate"></p>
     <p class="sub" id="cost"></p>
+    <div class="second" role="group" aria-labelledby="count2-label">
+      <p class="eyebrow">Second count</p>
+      <p class="count-label" id="count2-label">A second count of my moral responsibility: estimated date rapes and dating sexual assaults that could have been prevented dating back to the Harvard National Model United Nations conference of mid-February 2004, during my service as a first-year representative in student government at the University of Chicago, under the selected assumptions</p>
+      <p class="count small" id="count2">0</p>
+      <p class="sub" id="sub2"></p>
+    </div>
     <p class="sub share" id="share-line" hidden></p>
   </div>
   <div class="sr-only" aria-live="polite" aria-atomic="true" id="announce"></div>
@@ -243,6 +251,7 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
     <li><b>Date rape and dating assault share (d):</b> in the <a href="https://bjs.ojp.gov/content/pub/pdf/fvsv9410.pdf">Bureau of Justice Statistics’ <i>Female Victims of Sexual Violence, 1994–2010</i></a> (table 2), 34% of rapes and sexual assaults from 2005 to 2010 were by a current or former intimate partner and 38% by a friend or acquaintance, 72% together. Not all of those happened in a dating or sexual setting, and some began while the person was asleep or unconscious, so the scenarios assume 40% to 60%. Those figures are for female victims.</li>
     <li><b>Lifetime cost per victim:</b> $122,461 in 2014 dollars. Peterson C, DeGue S, Florence C, Lokey CN. Lifetime Economic Burden of Rape Among U.S. Adults. <i>American Journal of Preventive Medicine</i>. 2017;52(6):691–701 (CDC).</li>
     <li><b>Start of the counterfactual:</b> the estimate counts from <span id="src-start"></span>, when <span id="src-prov"></span> was filed. The application was later published as U.S. Pub. No. 2016/0196735 A1 on <span id="src-pub"></span>.</li>
+    <li><b>Start of the second count:</b> <span id="src-start2"></span>, the opening day of the Harvard National Model United Nations conference of mid-February 2004. Everything else in the second count comes from the same scenario and sliders as the first.</li>
     <li><b>Scenario values (d, b, u<sub>max</sub>, e):</b> modeling assumptions, not measured values.</li>
   </ul>
 </div></section>
@@ -266,17 +275,19 @@ footer{border-top:1px solid var(--line);padding-block:32px;font:400 .85rem/1.5 v
 </div></footer>
 
 <script type="module">
-import { CONFIG, presetParams, prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, toMs } from './model.js?v=4';
+import { CONFIG, presetParams, earlierParams, prevented, ratePerYear, ratePerSecond, avertedCost, sinceContact, toMs } from './model.js?v=5';
 
 const $ = (id) => document.getElementById(id);
 const fmt = new Intl.NumberFormat('en-US');
 const pct = (x) => Math.round(x * 100) + '%';
 const startYear = new Date(toMs(CONFIG.START)).getUTCFullYear();
+const earlierYear = new Date(toMs(CONFIG.EARLIER_START)).getUTCFullYear();
 const yearOf = (d) => new Date(toMs(d)).getUTCFullYear();
 const longDate = (d) => new Date(toMs(d)).toLocaleDateString('en-US', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
 
 $('start-year').textContent = startYear;
 $('src-start').textContent = longDate(CONFIG.START);
+$('src-start2').textContent = longDate(CONFIG.EARLIER_START) + (CONFIG.EARLIER_START_CONFIRMED ? '' : ' (date to be confirmed)');
 $('src-prov').textContent = CONFIG.PROVISIONAL_APP;
 $('src-pub').textContent = longDate(CONFIG.PUBLICATION_DATE) + (CONFIG.PUBLICATION_DATE_CONFIRMED ? '' : ' (date to be confirmed)');
 if (CONFIG.A_SOURCE_URL) {
@@ -297,7 +308,7 @@ const sliders = {
   e: { el: $('s-e'), out: $('o-e'), get: (v) => v / 100, set: (p) => Math.round(p.e * 100), show: (v) => v + '%' },
 };
 
-let params, preset, key = '', shown = 0;
+let params, preset, key = '', shown = 0, shown2 = 0;
 
 function syncSliders() {
   for (const k in sliders) {
@@ -365,6 +376,18 @@ function currentN(now) {
   shown = Math.max(shown, n);
   return shown;
 }
+// The second count: the same assumptions, counted from the earlier start.
+function currentN2(now) {
+  shown2 = Math.max(shown2, prevented(now, earlierParams(params)));
+  return shown2;
+}
+function showCount(el, n) {
+  const whole = Math.floor(n);
+  el.textContent = fmt.format(whole);
+  const f = document.createElement('span'); f.className = 'frac'; f.setAttribute('aria-hidden', 'true'); f.textContent = (n - whole).toFixed(2).slice(1);
+  el.append(f);
+  return whole;
+}
 
 function renderTable() {
   const rows = [
@@ -373,6 +396,7 @@ function renderTable() {
     ['Bedroom-reachable share (b)', pct(params.b), 'Assumption'],
     ['Peak adoption (u max)', pct(params.uMax), 'Assumption'],
     ['Adoption ramp', longDate(params.start) + ' to ' + longDate(params.rampEnd), 'Assumption'],
+    ['Adoption ramp, second count', longDate(CONFIG.EARLIER_START) + ' to ' + longDate(params.rampEnd), 'Assumption; same peak year, earlier start'],
     ['Efficacy (e)', pct(params.e), 'Assumption'],
     ['Lifetime cost per victim', '$122,461 (2014 dollars)', 'CDC: Peterson et al., 2017'],
   ];
@@ -407,11 +431,9 @@ function render() {
   const now = Date.now();
   renderContacts(now);
   const n = currentN(now);
-  const whole = Math.floor(n), frac = (n - whole).toFixed(2).slice(1);
-  const c = $('count');
-  c.textContent = fmt.format(whole);
-  const f = document.createElement('span'); f.className = 'frac'; f.setAttribute('aria-hidden', 'true'); f.textContent = frac;
-  c.append(f);
+  const whole = showCount($('count'), n);
+  const n2 = currentN2(now), whole2 = showCount($('count2'), n2);
+  $('sub2').textContent = 'Counted from ' + longDate(CONFIG.EARLIER_START) + ' with the same assumptions as the count above: ' + fmt.format(Math.max(0, whole2 - whole)) + ' more than the count since ' + startYear + '. Adoption ramps from that date to the same peak year.';
 
   const perYear = ratePerYear(now, params), perSec = ratePerSecond(now, params);
   $('rate').innerHTML = '';
@@ -423,7 +445,7 @@ function render() {
   }
   $('cost').textContent = 'Estimated averted lifetime cost: ' + money(avertedCost(n)) + ' in 2014 dollars (N × $122,461).';
   const s = shareValue();
-  if (s !== null) $('share-line').textContent = "Inventor's share (N × s, at " + Math.round(s * 100) + '%): ' + fmt.format(Math.floor(n * s)) + ' of ' + fmt.format(whole) + '.';
+  if (s !== null) $('share-line').textContent = "Inventor's share (N × s, at " + Math.round(s * 100) + '%): ' + fmt.format(Math.floor(n * s)) + ' of ' + fmt.format(whole) + ' since ' + startYear + ', and ' + fmt.format(Math.floor(n2 * s)) + ' of ' + fmt.format(whole2) + ' since ' + earlierYear + '.';
 }
 
 let announceTimer = 0;
@@ -432,8 +454,10 @@ function announce() {
   announceTimer = setTimeout(() => {
     const now = Date.now(), n = currentN(now), name = preset === 'custom' ? 'custom' : CONFIG.PRESETS[preset].label.toLowerCase();
     let msg = 'Under the ' + name + ' assumptions, an estimated ' + fmt.format(Math.floor(n)) + ' date rapes and dating sexual assaults could have been prevented since ' + startYear + ', about ' + fmt.format(Math.round(ratePerYear(now, params))) + ' a year now.';
+    const n2 = currentN2(now);
+    msg += ' Counted from February ' + earlierYear + ' instead: ' + fmt.format(Math.floor(n2)) + '.';
     const s = shareValue();
-    if (s !== null) msg += " Inventor's share at " + Math.round(s * 100) + '%: ' + fmt.format(Math.floor(n * s)) + '.';
+    if (s !== null) msg += " Inventor's share at " + Math.round(s * 100) + '%: ' + fmt.format(Math.floor(n * s)) + ' since ' + startYear + ' and ' + fmt.format(Math.floor(n2 * s)) + ' since ' + earlierYear + '.';
     $('announce').textContent = msg;
   }, 1000);
 }
@@ -441,7 +465,7 @@ function announce() {
 let ready = false;
 function changed() {
   const k = JSON.stringify(params);
-  if (k !== key) { key = k; shown = 0; renderTable(); }
+  if (k !== key) { key = k; shown = shown2 = 0; renderTable(); }
   render();
   if (ready) announce();
 }

@@ -40,6 +40,15 @@ export const CONFIG = {
   // When the counterfactual starts counting: the provisional filing date.
   START: '2015-01-03',
 
+  // Second count: the same model, dated back to the Harvard National Model
+  // United Nations conference of mid-February 2004, during the author's term
+  // as a first-year representative in student government at the University of
+  // Chicago. The conference was listed for February 12–15, 2004; the opening
+  // day is used. PLACEHOLDER: confirm the exact day. Everything except the
+  // start date comes from the scenario in use.
+  EARLIER_START: '2004-02-12',
+  EARLIER_START_CONFIRMED: false,
+
   // Lifetime cost per rape victim, 2014 dollars (CDC: Peterson et al. 2017,
   // Am J Prev Med 52(6):691–701).
   COST_PER_VICTIM_2014_USD: 122461,
@@ -82,6 +91,11 @@ export function presetParams(name, config = CONFIG) {
   const p = config.PRESETS[name];
   if (!p) throw new Error(`Unknown preset: ${name}`);
   return { A: config.A, d: p.d, b: p.b, uMax: p.uMax, e: p.e, start: config.START, rampEnd: p.rampEnd };
+}
+
+/** The same parameters counted from the earlier start (CONFIG.EARLIER_START). */
+export function earlierParams(params, config = CONFIG) {
+  return { ...params, start: config.EARLIER_START };
 }
 
 /** Adoption fraction u(t). */

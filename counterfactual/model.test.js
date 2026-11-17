@@ -92,16 +92,17 @@ test('ramp end at or before START means full adoption from START', () => {
 });
 
 test('sanity: Middle total in late 2026 matches a hand calculation', () => {
-  // Ramp Jan 3, 2015 to Jan 1, 2026 (~11 years), then ~0.85 years flat:
-  // A × 0.5 × 0.7 × 0.5 × 0.5 × (11/2 + 0.85).
+  // Ramp Oct 1, 2014 to Jan 1, 2026 (~11.25 years), then ~0.85 years flat:
+  // A × 0.5 × 0.7 × 0.5 × 0.5 × (11.25/2 + 0.85).
   const n = prevented('2026-11-07', middle);
-  const expected = CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * (11 / 2 + 0.85);
+  const expected = CONFIG.A * 0.5 * 0.7 * 0.5 * 0.5 * (11.25 / 2 + 0.85);
   assert.ok(Math.abs(n - expected) / expected < 0.01, `${n} vs ${expected}`);
 });
 
-test('counting starts at the provisional filing date', () => {
-  assert.equal(CONFIG.START, CONFIG.PROVISIONAL_FILED);
-  assert.equal(CONFIG.START, '2015-01-03');
+test('counting starts at the October 1, 2014 presentation, before the provisional filing', () => {
+  assert.equal(CONFIG.START, '2014-10-01');
+  assert.ok(toMs(CONFIG.START) < toMs(CONFIG.PROVISIONAL_FILED));
+  assert.equal(CONFIG.PROVISIONAL_FILED, '2015-01-03');
 });
 
 test('date share narrows the count', () => {

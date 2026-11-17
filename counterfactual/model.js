@@ -1,7 +1,7 @@
 // Counterfactual model: date rapes and dating sexual assaults that could have
 // been prevented if
 // bedroom consent-and-safety technology had been built and adopted after the
-// 2016 patent publication. Pure functions only, so this file can be imported
+// author first presented it on October 1, 2014. Pure functions only, so this file can be imported
 // by the page and by Node's test runner.
 //
 // N(t) = ∫ from START to t of A × d × b × u(τ) × e dτ
@@ -33,12 +33,19 @@ export const CONFIG = {
   PROVISIONAL_APP: 'U.S. Provisional Application No. 62/099,456',
   PROVISIONAL_FILED: '2015-01-03',
 
-  // Later publication of U.S. Pub. No. 2016/0196735 A1. PLACEHOLDER: confirm.
+  // Later publication of U.S. Pub. No. 2016/0196735 A1 (Google Patents lists
+  // July 7, 2016).
   PUBLICATION_DATE: '2016-07-07',
-  PUBLICATION_DATE_CONFIRMED: false,
+  PUBLICATION_DATE_CONFIRMED: true,
 
-  // When the counterfactual starts counting: the provisional filing date.
-  START: '2015-01-03',
+  // When the counterfactual starts counting: October 1, 2014, when the author
+  // presented a rudimentary version of the system to the Small Business
+  // Development Center at the University Heights Library Business Development
+  // Center. The recording was uploaded that day and released publicly on
+  // November 2, 2026.
+  START: '2014-10-01',
+  START_RECORDING_URL: 'https://www.youtube.com/watch?v=xAL0qQuK4AY',
+  START_RECORDING_RELEASED: '2026-11-02',
 
   // Second count: the same model, dated back to the Harvard National Model
   // United Nations conference of mid-February 2004, during the author's term

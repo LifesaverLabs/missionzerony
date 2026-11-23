@@ -52,8 +52,10 @@
     if (d.classList.contains('pol')) {
       send('proposal_open', { proposal_id: (d.id || '').toUpperCase(), section: sectionOf(d) });
     } else {
+      // A section-level "Read more" fold is labeled by its own summary, not by a heading inside it.
+      var isFold = d.classList.contains('fold');
       var item = d.closest('li, .tool, .plan') || d;
-      var h = item.querySelector('h3');
+      var h = isFold ? null : item.querySelector('h3');
       send('details_open', { label: label(h || d.querySelector('summary') || d), section: sectionOf(d) });
     }
   }, true);
@@ -87,17 +89,27 @@
     if (ms >= 1000) send('section_time', { section: id, seconds: Math.round(ms / 1000) });
   }
   if ('IntersectionObserver' in window) {
+    // A section counts as on screen when 35% of it is visible, or, for a
+    // section taller than the window, when it fills 35% of the window. A
+    // single 35% threshold never fires for sections more than about three
+    // screens tall, so the observer reports often and the test is done here.
+    var SHARE = 0.35, steps = [];
+    for (var i = 0; i < 50; i++) steps.push(i / 1000);
+    for (var j = 5; j <= 100; j++) steps.push(j / 100);
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (en) {
         var id = en.target.id || en.target.getAttribute('aria-labelledby') || en.target.className || 'section';
-        if (en.isIntersecting) {
+        var rootH = (en.rootBounds && en.rootBounds.height) || window.innerHeight || 0;
+        var need = SHARE * Math.min(en.boundingClientRect.height, rootH);
+        var onScreen = en.isIntersecting && en.intersectionRect.height > 0 && en.intersectionRect.height >= need;
+        if (onScreen) {
           if (!seen[id]) { seen[id] = true; send('section_view', { section: id }); }
-          if (document.visibilityState === 'visible') visibleSince[id] = Date.now();
+          if (!visibleSince[id] && document.visibilityState === 'visible') visibleSince[id] = Date.now();
         } else {
           flush(id);
         }
       });
-    }, { threshold: 0.35 });
+    }, { threshold: steps });
     function observe() {
       document.querySelectorAll('main section').forEach(function (s) { io.observe(s); });
     }
